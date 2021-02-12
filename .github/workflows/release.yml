@@ -1,0 +1,38 @@
+name: Release Build
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+env:
+  CARGO_TERM_COLOR: always
+  BIN_NAME: vps_bench
+
+jobs:
+  build:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ macos-latest, windows-2019, ubuntu-latest ]
+    steps:
+      - uses: actions/checkout@v2
+      - name: Rust Version
+        run: rustc --version
+      - name: Build
+        run: cargo build --release --verbose
+
+      # upload unix
+      - uses: actions/upload-artifact@v2
+        if: strategy.os != 'windows-latest'
+        with:
+          name: ${{ matrix.os }}
+          path: target/release/${{ env.BIN_NAME }}
+
+      # upload windows
+      - uses: actions/upload-artifact@v2
+        if: strategy.os == 'windows-2019'
+        with:
+          name: ${{ matrix.os }}
+          path: target/release/${{ env.BIN_NAME }}.exe
