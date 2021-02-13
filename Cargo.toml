@@ -1,8 +1,10 @@
 [package]
 name = "vps_bench"
-version = "0.1.0"
+version = "0.0.1-pre"
 authors = ["dev <dev@qiyutech.tech>"]
 edition = "2018"
+license-file = "LICENSE"
+homepage = "https://vps.qiyutech.tech/"
 
 [[bin]]
 name = "vps_bench"
