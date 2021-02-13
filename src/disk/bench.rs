@@ -3,24 +3,7 @@ use std::time;
 
 use rand::{Rng, SeedableRng};
 
-/// 读写测试结果
-#[derive(Debug, Default)]
-pub struct IOResult {
-    /// 读 耗时 单位: 秒
-    read: f64,
-    /// 写 耗时 单位: 秒
-    write: f64,
-}
-
-impl IOResult {
-    #[inline]
-    pub fn new(read: time::Duration, write: time::Duration) -> Self {
-        Self {
-            read: read.as_secs_f64(),
-            write: write.as_secs_f64(),
-        }
-    }
-}
+use crate::shared::IOTime;
 
 /// 磁盘性能测试结果
 #[derive(Debug, Default)]
@@ -30,15 +13,15 @@ pub struct DiskResult {
     /// 记录块大小
     block_size: usize,
     /// 顺序 读/写 测试结果
-    seq: IOResult,
+    seq: IOTime,
     /// 顺序 重 读/写 测试结果
-    seq_re: IOResult,
+    seq_re: IOTime,
     /// 随机 读/写 测试结果
-    rand: IOResult,
+    rand: IOTime,
     /// 跳 读/写 测试结果
-    stride: IOResult,
+    stride: IOTime,
     /// 倒 读/写 测试结果
-    reverse: IOResult,
+    reverse: IOTime,
 }
 
 /// 磁盘性能测试
@@ -69,11 +52,11 @@ impl DiskBench {
         result.file_size = self.file_size;
         result.block_size = self.block_size;
 
-        result.seq = IOResult::new(self.seq_read(), self.seq_write());
-        result.seq_re = IOResult::new(self.seq_re_read(), self.seq_re_write());
-        result.rand = IOResult::new(self.rand_read(), self.rand_write());
-        result.stride = IOResult::new(self.stride_read(), self.stride_write());
-        result.reverse = IOResult::new(self.reverse_read(), self.reverse_write());
+        result.seq = IOTime::new(self.seq_read(), self.seq_write());
+        result.seq_re = IOTime::new(self.seq_re_read(), self.seq_re_write());
+        result.rand = IOTime::new(self.rand_read(), self.rand_write());
+        result.stride = IOTime::new(self.stride_read(), self.stride_write());
+        result.reverse = IOTime::new(self.reverse_read(), self.reverse_write());
 
         result
     }

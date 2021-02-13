@@ -1,7 +1,11 @@
+mod io_time;
+
 use std::time;
 
 use rand::{Rng, SeedableRng};
 use structopt::StructOpt;
+
+pub use io_time::IOTime;
 
 #[derive(Debug, StructOpt)]
 pub struct SharedCli {

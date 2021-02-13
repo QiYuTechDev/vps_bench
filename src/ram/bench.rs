@@ -3,40 +3,24 @@ use std::time::Instant;
 
 use rand::{Rng, SeedableRng};
 
-#[derive(Debug, Default)]
-pub struct IOResult {
-    /// 写时间, 单位: s
-    pub write: f64,
-    /// 读时间, 单位: s
-    pub read: f64,
-}
-
-impl IOResult {
-    #[inline]
-    pub fn new(read: time::Duration, write: time::Duration) -> Self {
-        Self {
-            read: read.as_secs_f64(),
-            write: write.as_secs_f64(),
-        }
-    }
-}
+use crate::shared::IOTime;
 
 #[derive(Debug, Default)]
 pub struct RAMResult {
     /// 内存大小
     pub mem_size: u64,
     /// 顺序 读写耗时
-    pub seq: IOResult,
+    pub seq: IOTime,
     /// 随机 读写耗时
-    pub rand: IOResult,
+    pub rand: IOTime,
 }
 
 impl RAMResult {
     pub fn new(mem_size: u64) -> Self {
         Self {
             mem_size,
-            seq: IOResult::default(),
-            rand: IOResult::default(),
+            seq: IOTime::default(),
+            rand: IOTime::default(),
         }
     }
 }
@@ -60,8 +44,8 @@ impl RAMBench {
     pub fn run_bench(&mut self) -> RAMResult {
         let mut result = RAMResult::new(self.mem.capacity() as u64);
 
-        result.seq = IOResult::new(self.seq_read_data().0, self.seq_write_data());
-        result.rand = IOResult::new(self.rand_read_data().0, self.rand_write_data());
+        result.seq = IOTime::new(self.seq_read_data().0, self.seq_write_data());
+        result.rand = IOTime::new(self.rand_read_data().0, self.rand_write_data());
 
         result
     }
