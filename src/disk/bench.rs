@@ -24,6 +24,21 @@ pub struct DiskResult {
     reverse: IOTime,
 }
 
+impl DiskResult {
+    #[inline]
+    pub fn new(file_size: usize, block_size: usize) -> Self {
+        Self {
+            file_size,
+            block_size,
+            seq: IOTime::default(),
+            seq_re: IOTime::default(),
+            rand: IOTime::default(),
+            stride: IOTime::default(),
+            reverse: IOTime::default(),
+        }
+    }
+}
+
 /// 磁盘性能测试
 pub struct DiskBench {
     /// 测试使用的文件名称
@@ -47,10 +62,7 @@ impl DiskBench {
 
     /// 运行磁盘测试
     pub fn run_bench(&self) -> DiskResult {
-        let mut result = DiskResult::default();
-
-        result.file_size = self.file_size;
-        result.block_size = self.block_size;
+        let mut result = DiskResult::new(self.file_size, self.block_size);
 
         result.seq = IOTime::new(self.seq_read(), self.seq_write());
         result.seq_re = IOTime::new(self.seq_re_read(), self.seq_re_write());
