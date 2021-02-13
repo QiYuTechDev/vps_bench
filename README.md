@@ -7,6 +7,10 @@
 ![Debug Build](https://github.com/QiYuTechDev/vps_bench/workflows/Debug%20Build/badge.svg)
 ![Cross](https://github.com/QiYuTechDev/vps_bench/workflows/Cross/badge.svg)
 
+![Crates.io](https://img.shields.io/crates/v/vps_bench)
+![Crates.io](https://img.shields.io/crates/l/vps_bench)
+![Crates.io](https://img.shields.io/crates/d/vps_bench)
+
 奇遇科技虚拟服务器 CPU/内存/磁盘/网络 测试工具
 
 ## 注意:
