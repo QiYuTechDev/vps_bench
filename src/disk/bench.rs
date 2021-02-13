@@ -68,7 +68,7 @@ impl DiskBench {
 
         let start_time = time::Instant::now();
         for _ in 0..self.blocks() {
-            file.read_exact(data.as_mut_slice())
+            file.read_exact(data.as_mut_slice()).unwrap();
         }
         time::Instant::now() - start_time
     }
@@ -77,6 +77,9 @@ impl DiskBench {
     #[inline(never)]
     pub fn seq_re_write(&self) -> time::Duration {
         let (_, mut file) = self.do_write_file();
+
+        let block_data = Self::gen_block_size_data(self.block_size);
+
         let start_time = time::Instant::now();
         // from start re-write the file
         for _ in 0..self.blocks() {
@@ -207,11 +210,33 @@ impl DiskBench {
 
     /// 倒 写
     #[inline(never)]
-    pub fn reverse_write(&self) {}
+    pub fn reverse_write(&self) -> time::Duration {
+        let (_, mut file) = self.do_write_file();
+
+        let mut data = Self::gen_block_size_data(self.block_size);
+
+        let start_time = time::Instant::now();
+        for idx in self.blocks()..0 {
+            file.seek(SeekFrom::Start((idx * self.block_size) as u64)).unwrap();
+            file.write_all(data.as_slice()).unwrap();
+        }
+        time::Instant::now() - start_time
+    }
 
     /// 倒 读
     #[inline(never)]
-    pub fn reverse_read(&self) {}
+    pub fn reverse_read(&self) -> time::Duration {
+        let (_, mut file) = self.do_write_file();
+
+        let mut data = Self::gen_block_size_data(self.block_size);
+
+        let start_time = time::Instant::now();
+        for idx in self.blocks()..0 {
+            let _ = file.seek(SeekFrom::Start((idx * self.block_size) as u64)).unwrap();
+            file.read_exact(data.as_mut_slice()).unwrap();
+        }
+        time::Instant::now() - start_time
+    }
 
     /// fill file with random data
     #[inline(never)]
