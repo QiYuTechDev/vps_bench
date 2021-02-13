@@ -3,6 +3,7 @@ name = "vps_bench"
 version = "0.0.1-pre"
 authors = ["dev <dev@qiyutech.tech>"]
 edition = "2018"
+description = "奇遇科技 VPS 性能测试工具"
 license-file = "LICENSE"
 homepage = "https://vps.qiyutech.tech/"
 
