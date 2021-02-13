@@ -1,6 +1,7 @@
-use rand::{Rng, SeedableRng};
 use std::io::{Read, Seek, SeekFrom, Write};
 use std::time;
+
+use rand::{Rng, SeedableRng};
 
 /// 读写测试结果
 #[derive(Default)]
@@ -51,6 +52,7 @@ impl DiskBench {
     }
 
     /// 顺序 写
+    #[inline(never)]
     pub fn seq_write(&self) -> time::Duration {
         let (use_time, file) = self.do_write_file();
         drop(file);
@@ -58,6 +60,7 @@ impl DiskBench {
     }
 
     /// 顺序 读
+    #[inline(never)]
     pub fn seq_read(&self) -> time::Duration {
         let (_, mut file) = self.do_write_file();
 
@@ -72,27 +75,63 @@ impl DiskBench {
     }
 
     /// 顺序 重写
-    pub fn seq_re_write(&self) {}
+    #[inline(never)]
+    pub fn seq_re_write(&self) -> time::Duration {
+        let (_, mut file) = self.do_write_file();
+        let start_time = time::Instant::now();
+        // from start re-write the file
+        for _ in 0..(self.file_size / self.block_size) {
+            file.write_all(block_data.as_slice());
+        }
+        time::Instant::now() - start_time
+    }
 
     /// 顺序 重读
-    pub fn seq_re_read(&self) {}
+    #[inline(never)]
+    pub fn seq_re_read(&self) -> time::Duration {
+        let (_, mut file) = self.do_write_file();
+
+        let mut data = Vec::<u8>::with_capacity(self.block_size);
+        unsafe { data.set_len(self.block_size) };
+
+        // first time read
+        for _ in 0..(self.file_size / self.block_size) {
+            file.read_exact(data.as_mut_slice())
+        }
+
+        // re-read all data
+        let start_time = time::Instant::now();
+        for _ in 0..(self.file_size / self.block_size) {
+            file.read_exact(data.as_mut_slice())
+        }
+        time::Instant::now() - start_time
+    }
 
     /// 随机 写
-    pub fn rand_write(&self) {}
+    #[inline(never)]
+    pub fn rand_write(&self) -> time::Duration {
+        let (_, mut file) = self.do_write_file();
+        // 随机写数据
+    }
 
     /// 随机 读
+    #[inline(never)]
     pub fn rand_read(&self) {}
 
     /// 跳 写
+    #[inline(never)]
     pub fn stride_write(&self) {}
 
     /// 跳 读
+    #[inline(never)]
     pub fn stride_read(&self) {}
 
     /// 倒 写
+    #[inline(never)]
     pub fn reverse_write(&self) {}
 
     /// 倒 读
+    #[inline(never)]
     pub fn reverse_read(&self) {}
 
     /// fill file with random data
