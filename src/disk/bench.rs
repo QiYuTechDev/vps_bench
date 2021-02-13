@@ -4,7 +4,7 @@ use std::time;
 use rand::{Rng, SeedableRng};
 
 /// 读写测试结果
-#[derive(Default)]
+#[derive(Debug, Default)]
 pub struct IOResult {
     /// 读 耗时 单位: 秒
     read: f64,
