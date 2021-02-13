@@ -88,10 +88,7 @@ impl RAMBench {
             let position = rng.gen_range(0..mem_size);
             unsafe { r += ptr.add(position).read() };
         }
-        (
-            Instant::now() - start_time - gen_position_time,
-            r,
-        )
+        (Instant::now() - start_time - gen_position_time, r)
     }
 
     /// 顺序写内存数据
