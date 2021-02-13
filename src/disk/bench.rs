@@ -64,8 +64,7 @@ impl DiskBench {
     pub fn seq_read(&self) -> time::Duration {
         let (_, mut file) = self.do_write_file();
 
-        let mut data = Vec::<u8>::with_capacity(self.block_size);
-        unsafe { data.set_len(self.block_size) };
+        let mut data = Self::gen_block_size_data(self.block_size);
 
         let start_time = time::Instant::now();
         for _ in 0..self.blocks() {
@@ -91,18 +90,17 @@ impl DiskBench {
     pub fn seq_re_read(&self) -> time::Duration {
         let (_, mut file) = self.do_write_file();
 
-        let mut data = Vec::<u8>::with_capacity(self.block_size);
-        unsafe { data.set_len(self.block_size) };
+        let mut data = Self::gen_block_size_data(self.block_size);
 
         // first time read
         for _ in 0..self.blocks() {
-            file.read_exact(data.as_mut_slice())
+            let _ = file.read_exact(data.as_mut_slice()).unwrap();
         }
 
         // re-read all data
         let start_time = time::Instant::now();
         for _ in 0..self.blocks() {
-            file.read_exact(data.as_mut_slice())
+            let _ = file.read_exact(data.as_mut_slice()).unwrap();
         }
         time::Instant::now() - start_time
     }
@@ -111,21 +109,43 @@ impl DiskBench {
     #[inline(never)]
     pub fn rand_write(&self) -> time::Duration {
         let (_, mut file) = self.do_write_file();
-        // 随机写数据
 
         let mut rng = rand::rngs::SmallRng::from_entropy();
+        let data = Self::gen_block_size_data(self.block_size);
+
         let blocks = self.blocks();
+
         let start_time = time::Instant::now();
+        // 随机写数据
         for _ in 0..blocks {
             let v = rng.gen_range(0..blocks);
+            let _ = file
+                .seek(SeekFrom::Start((v * self.block_size) as u64))
+                .unwrap();
+            let _ = file.write_all(data.as_slice()).unwrap();
         }
-        // todo impl
         time::Instant::now() - start_time
     }
 
     /// 随机 读
     #[inline(never)]
-    pub fn rand_read(&self) {}
+    pub fn rand_read(&self) -> time::Duration {
+        let (_, mut file) = self.do_write_file();
+        let mut data = Self::gen_block_size_data(self.block_size);
+
+        let blocks = self.blocks();
+
+        let start_time = time::Instant::now();
+        // 随机读取数据
+        for _ in 0..blocks {
+            let v = rng.gen_range(0..blocks);
+            let _ = file
+                .seek(SeekFrom::Start((v * self.block_size) as u64))
+                .unwrap();
+            let _ = file.read_exact(data.as_mut_slice()).unwrap();
+        }
+        time::Instant::now() - start_time
+    }
 
     /// 跳 写
     #[inline(never)]
