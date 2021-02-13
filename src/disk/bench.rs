@@ -156,30 +156,54 @@ impl DiskBench {
         let data = Self::gen_block_size_data(self.block_size);
 
         let start_time = time::Instant::now();
-        self.do_stride_write(&mut file, 2, &data);
-        self.do_stride_write(&mut file, 4, &data);
-        self.do_stride_write(&mut file, 8, &data);
-        self.do_stride_write(&mut file, 16, &data);
-        self.do_stride_write(&mut file, 32, &data);
-        self.do_stride_write(&mut file, 64, &data);
-        self.do_stride_write(&mut file, 64, &data); // 4 * 64 = 256
+        self.do_stride_write(&mut file, 2, data.as_slice());
+        self.do_stride_write(&mut file, 4, data.as_slice());
+        self.do_stride_write(&mut file, 8, data.as_slice());
+        self.do_stride_write(&mut file, 16, data.as_slice());
+        self.do_stride_write(&mut file, 32, data.as_slice());
+        self.do_stride_write(&mut file, 64, data.as_slice());
+        self.do_stride_write(&mut file, 64, data.as_slice()); // 4 * 64 = 256
         time::Instant::now() - start_time
     }
 
     #[inline(always)]
-    pub fn do_stride_write(&self, file: &mut std::fs::File, step: usize, data: &Vec<u8>) {
+    pub fn do_stride_write(&self, file: &mut std::fs::File, step: usize, data: &[u8]) {
         let blocks = self.blocks();
         for idx in (0..blocks).step_by(step) {
             let _ = file
                 .seek(SeekFrom::Start((idx * step * self.block_size) as u64))
                 .unwrap();
-            let _ = file.write_all(data.as_slice()).unwrap();
+            let _ = file.write_all(data).unwrap();
         }
     }
 
     /// 跳 读
     #[inline(never)]
-    pub fn stride_read(&self) {}
+    pub fn stride_read(&self) -> time::Duration {
+        let (_, mut file) = self.do_write_file();
+
+        let mut data = Self::gen_block_size_data(self.block_size);
+        let start_time = time::Instant::now();
+        self.do_stride_read(&mut file, 2, data.as_mut_slice());
+        self.do_stride_read(&mut file, 4, data.as_mut_slice());
+        self.do_stride_read(&mut file, 8, data.as_mut_slice());
+        self.do_stride_read(&mut file, 16, data.as_mut_slice());
+        self.do_stride_read(&mut file, 32, data.as_mut_slice());
+        self.do_stride_read(&mut file, 64, data.as_mut_slice());
+        self.do_stride_read(&mut file, 64, data.as_mut_slice()); // 4 * 64 = 256
+        time::Instant::now() - start_time
+    }
+
+    #[inline(always)]
+    pub fn do_stride_read(&self, file: &mut std::fs::File, step: usize, data: &mut [u8]) {
+        let blocks = self.blocks();
+        for idx in (0..blocks).step_by(step) {
+            let _ = file
+                .seek(SeekFrom::Start((idx * step * self.block_size) as u64))
+                .unwrap();
+            let _ = file.read_exact(data).unwrap();
+        }
+    }
 
     /// 倒 写
     #[inline(never)]
