@@ -4,17 +4,41 @@ use std::time::Instant;
 use rand::{Rng, SeedableRng};
 
 #[derive(Debug, Default)]
+pub struct IOResult {
+    /// 写时间, 单位: s
+    pub write: f64,
+    /// 读时间, 单位: s
+    pub read: f64,
+}
+
+impl IOResult {
+    #[inline]
+    pub fn new(read: time::Duration, write: time::Duration) -> Self {
+        Self {
+            read: read.as_secs_f64(),
+            write: write.as_secs_f64(),
+        }
+    }
+}
+
+#[derive(Debug, Default)]
 pub struct RAMResult {
     /// 内存大小
     pub mem_size: u64,
-    /// 顺序写时间, 单位: s
-    pub seq_write: f64,
-    /// 顺序读时间, 单位: s
-    pub seq_read: f64,
-    /// 随机写时间, 单位: s
-    pub rand_write: f64,
-    /// 随机读时间, 单位: s
-    pub rand_read: f64,
+    /// 顺序 读写耗时
+    pub seq: IOResult,
+    /// 随机 读写耗时
+    pub rand: IOResult,
+}
+
+impl RAMResult {
+    pub fn new(mem_size: u64) -> Self {
+        Self {
+            mem_size,
+            seq: IOResult::default(),
+            rand: IOResult::default(),
+        }
+    }
 }
 
 /// RAM 读写速度测试
@@ -34,13 +58,10 @@ impl RAMBench {
 
     /// 运行一次性能测试
     pub fn run_bench(&mut self) -> RAMResult {
-        let mut result = RAMResult::default();
+        let mut result = RAMResult::new(self.mem.capacity() as u64);
 
-        result.mem_size = self.mem.capacity() as u64;
-        result.seq_write = self.seq_write_data().as_secs_f64();
-        result.seq_read = self.seq_read_data().0.as_secs_f64();
-        result.rand_write = self.rand_write_data().as_secs_f64();
-        result.rand_read = self.rand_read_data().0.as_secs_f64();
+        result.seq = IOResult::new(self.seq_read_data().0, self.seq_write_data());
+        result.rand = IOResult::new(self.rand_read_data().0, self.rand_write_data());
 
         result
     }
