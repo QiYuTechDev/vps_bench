@@ -1,4 +1,4 @@
-# 虚拟服务器测试
+# 奇遇科技 服务器 性能测试工具
 
 ![Release Build](https://github.com/QiYuTechDev/vps_bench/workflows/Release%20Build/badge.svg)
 ![Publish To Rust Crates](https://github.com/QiYuTechDev/vps_bench/workflows/Publish%20To%20Rust%20Crates/badge.svg)
@@ -11,7 +11,18 @@
 ![Crates.io](https://img.shields.io/crates/l/vps_bench)
 ![Crates.io](https://img.shields.io/crates/d/vps_bench)
 
-奇遇科技虚拟服务器 CPU/内存/磁盘/网络 测试工具
+当前支持的测试:
+
+* CPU
+* 内存
+* 磁盘
+
+等待添加的:
+
+* 网络
+* Sqlite3
+* MySQL
+* PostgreSQL
 
 ## 注意:
 
