@@ -68,7 +68,7 @@ impl DiskBench {
         unsafe { data.set_len(self.block_size) };
 
         let start_time = time::Instant::now();
-        for _ in 0..(self.file_size / self.block_size) {
+        for _ in 0..self.blocks() {
             file.read_exact(data.as_mut_slice())
         }
         time::Instant::now() - start_time
@@ -80,7 +80,7 @@ impl DiskBench {
         let (_, mut file) = self.do_write_file();
         let start_time = time::Instant::now();
         // from start re-write the file
-        for _ in 0..(self.file_size / self.block_size) {
+        for _ in 0..self.blocks() {
             file.write_all(block_data.as_slice());
         }
         time::Instant::now() - start_time
@@ -95,13 +95,13 @@ impl DiskBench {
         unsafe { data.set_len(self.block_size) };
 
         // first time read
-        for _ in 0..(self.file_size / self.block_size) {
+        for _ in 0..self.blocks() {
             file.read_exact(data.as_mut_slice())
         }
 
         // re-read all data
         let start_time = time::Instant::now();
-        for _ in 0..(self.file_size / self.block_size) {
+        for _ in 0..self.blocks() {
             file.read_exact(data.as_mut_slice())
         }
         time::Instant::now() - start_time
@@ -112,6 +112,15 @@ impl DiskBench {
     pub fn rand_write(&self) -> time::Duration {
         let (_, mut file) = self.do_write_file();
         // 随机写数据
+
+        let mut rng = rand::rngs::SmallRng::from_entropy();
+        let blocks = self.blocks();
+        let start_time = time::Instant::now();
+        for _ in 0..blocks {
+            let v = rng.gen_range(0..blocks);
+        }
+        // todo impl
+        time::Instant::now() - start_time
     }
 
     /// 随机 读
@@ -148,13 +157,18 @@ impl DiskBench {
         let block_data = Self::gen_block_size_data(self.block_size);
 
         let start_time = time::Instant::now();
-        for _ in 0..(self.file_size / self.block_size) {
+        for _ in 0..self.blocks() {
             file.write_all(block_data.as_slice());
         }
         let use_time = time::Instant::now() - start_time;
         // set offset to start
         file.seek(SeekFrom::Start(0));
         (use_time, file)
+    }
+
+    #[inline(always)]
+    const fn blocks(&self) -> usize {
+        self.file_size / self.block_size
     }
 
     /// 生成 `block_size` 大小的随机数据
