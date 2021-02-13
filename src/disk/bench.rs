@@ -275,6 +275,7 @@ impl DiskBench {
 
         let mut file = std::fs::OpenOptions::new()
             .write(true)
+            .read(true)
             .create_new(true)
             .open(self.file_name.as_str())
             .expect("打开文件失败");
