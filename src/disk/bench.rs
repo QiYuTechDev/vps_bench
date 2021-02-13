@@ -78,6 +78,7 @@ impl DiskBench {
     pub fn seq_write(&self) -> time::Duration {
         let (use_time, file) = self.do_write_file();
         drop(file);
+        println!("顺序写测试结束,耗时: {:?}", use_time);
         use_time
     }
 
@@ -92,7 +93,9 @@ impl DiskBench {
         for _ in 0..self.blocks() {
             file.read_exact(data.as_mut_slice()).unwrap();
         }
-        time::Instant::now() - start_time
+        let use_time = time::Instant::now() - start_time;
+        println!("顺序读测试结束,耗时: {:?}", use_time);
+        use_time
     }
 
     /// 顺序 重写
@@ -102,12 +105,14 @@ impl DiskBench {
 
         let block_data = Self::gen_block_size_data(self.block_size);
 
-        let start_time = time::Instant::now();
         // from start re-write the file
+        let start_time = time::Instant::now();
         for _ in 0..self.blocks() {
             file.write_all(block_data.as_slice()).unwrap();
         }
-        time::Instant::now() - start_time
+        let use_time = time::Instant::now() - start_time;
+        println!("顺序重写测试结束,耗时: {:?}", use_time);
+        use_time
     }
 
     /// 顺序 重读
@@ -119,15 +124,19 @@ impl DiskBench {
 
         // first time read
         for _ in 0..self.blocks() {
-            let _ = file.read_exact(data.as_mut_slice()).unwrap();
+            file.read_exact(data.as_mut_slice()).unwrap();
         }
+
+        file.seek(SeekFrom::Start(0)).unwrap();
 
         // re-read all data
         let start_time = time::Instant::now();
         for _ in 0..self.blocks() {
-            let _ = file.read_exact(data.as_mut_slice()).unwrap();
+            file.read_exact(data.as_mut_slice()).unwrap();
         }
-        time::Instant::now() - start_time
+        let use_time = time::Instant::now() - start_time;
+        println!("顺序重读测试结束,耗时: {:?}", use_time);
+        use_time
     }
 
     /// 随机 写
@@ -144,12 +153,13 @@ impl DiskBench {
         // 随机写数据
         for _ in 0..blocks {
             let v = rng.gen_range(0..blocks);
-            let _ = file
-                .seek(SeekFrom::Start((v * self.block_size) as u64))
+            file.seek(SeekFrom::Start((v * self.block_size) as u64))
                 .unwrap();
-            let _ = file.write_all(data.as_slice()).unwrap();
+            file.write_all(data.as_slice()).unwrap();
         }
-        time::Instant::now() - start_time
+        let use_time = time::Instant::now() - start_time;
+        println!("随机写测试结束,耗时: {:?}", use_time);
+        use_time
     }
 
     /// 随机 读
@@ -165,12 +175,13 @@ impl DiskBench {
         // 随机读取数据
         for _ in 0..blocks {
             let v = rng.gen_range(0..blocks);
-            let _ = file
-                .seek(SeekFrom::Start((v * self.block_size) as u64))
+            file.seek(SeekFrom::Start((v * self.block_size) as u64))
                 .unwrap();
-            let _ = file.read_exact(data.as_mut_slice()).unwrap();
+            file.read_exact(data.as_mut_slice()).unwrap();
         }
-        time::Instant::now() - start_time
+        let use_time = time::Instant::now() - start_time;
+        println!("随机读测试结束,耗时: {:?}", use_time);
+        use_time
     }
 
     /// 跳 写
@@ -188,17 +199,18 @@ impl DiskBench {
         self.do_stride_write(&mut file, 32, data.as_slice());
         self.do_stride_write(&mut file, 64, data.as_slice());
         self.do_stride_write(&mut file, 64, data.as_slice()); // 4 * 64 = 256
-        time::Instant::now() - start_time
+        let use_time = time::Instant::now() - start_time;
+        println!("跳写测试结束,耗时: {:?}", use_time);
+        use_time
     }
 
     #[inline(always)]
     pub fn do_stride_write(&self, file: &mut std::fs::File, step: usize, data: &[u8]) {
         let blocks = self.blocks();
         for idx in (0..blocks).step_by(step) {
-            let _ = file
-                .seek(SeekFrom::Start((idx * step * self.block_size) as u64))
+            file.seek(SeekFrom::Start((idx * step * self.block_size) as u64))
                 .unwrap();
-            let _ = file.write_all(data).unwrap();
+            file.write_all(data).unwrap();
         }
     }
 
@@ -216,17 +228,18 @@ impl DiskBench {
         self.do_stride_read(&mut file, 32, data.as_mut_slice());
         self.do_stride_read(&mut file, 64, data.as_mut_slice());
         self.do_stride_read(&mut file, 64, data.as_mut_slice()); // 4 * 64 = 256
-        time::Instant::now() - start_time
+        let use_time = time::Instant::now() - start_time;
+        println!("跳读测试结束,耗时: {:?}", use_time);
+        use_time
     }
 
     #[inline(always)]
     pub fn do_stride_read(&self, file: &mut std::fs::File, step: usize, data: &mut [u8]) {
         let blocks = self.blocks();
         for idx in (0..blocks).step_by(step) {
-            let _ = file
-                .seek(SeekFrom::Start((idx * step * self.block_size) as u64))
+            file.seek(SeekFrom::Start((idx * step * self.block_size) as u64))
                 .unwrap();
-            let _ = file.read_exact(data).unwrap();
+            file.read_exact(data).unwrap();
         }
     }
 
@@ -243,7 +256,9 @@ impl DiskBench {
                 .unwrap();
             file.write_all(data.as_slice()).unwrap();
         }
-        time::Instant::now() - start_time
+        let use_time = time::Instant::now() - start_time;
+        println!("倒写测试结束,耗时: {:?}", use_time);
+        use_time
     }
 
     /// 倒 读
@@ -255,18 +270,22 @@ impl DiskBench {
 
         let start_time = time::Instant::now();
         for idx in self.blocks()..0 {
-            let _ = file
-                .seek(SeekFrom::Start((idx * self.block_size) as u64))
+            file.seek(SeekFrom::Start((idx * self.block_size) as u64))
                 .unwrap();
             file.read_exact(data.as_mut_slice()).unwrap();
         }
-        time::Instant::now() - start_time
+        let use_time = time::Instant::now() - start_time;
+        println!("倒读测试结束,耗时: {:?}", use_time);
+        use_time
     }
 
     /// fill file with random data
     #[inline(never)]
     fn do_write_file(&self) -> (time::Duration, std::fs::File) {
-        let _ = std::fs::remove_file(self.file_name.as_str());
+        // 删除文件 - 如果存在
+        if std::path::Path::new(self.file_name.as_str()).exists() {
+            std::fs::remove_file(self.file_name.as_str()).unwrap();
+        }
 
         let mut file = std::fs::OpenOptions::new()
             .write(true)
