@@ -12,7 +12,18 @@ pub struct IOResult {
     write: f64,
 }
 
+impl IOResult {
+    #[inline]
+    pub fn new(read: time::Duration, write: time::Duration) -> Self {
+        Self {
+            read: read.as_secs_f64(),
+            write: write.as_secs_f64(),
+        }
+    }
+}
+
 /// 磁盘性能测试结果
+#[derive(Debug, Default)]
 pub struct DiskResult {
     /// 文件大小
     file_size: usize,
@@ -49,6 +60,22 @@ impl DiskBench {
             file_size,
             block_size,
         }
+    }
+
+    /// 运行磁盘测试
+    pub fn run_bench(&self) -> DiskResult {
+        let mut result = DiskResult::default();
+
+        result.file_size = self.file_size;
+        result.block_size = self.block_size;
+
+        result.seq = IOResult::new(self.seq_read(), self.seq_write());
+        result.seq_re = IOResult::new(self.seq_re_read(), self.seq_re_write());
+        result.rand = IOResult::new(self.rand_read(), self.rand_write());
+        result.stride = IOResult::new(self.stride_read(), self.stride_write());
+        result.reverse = IOResult::new(self.reverse_read(), self.reverse_write());
+
+        result
     }
 
     /// 顺序 写
@@ -217,7 +244,8 @@ impl DiskBench {
 
         let start_time = time::Instant::now();
         for idx in self.blocks()..0 {
-            file.seek(SeekFrom::Start((idx * self.block_size) as u64)).unwrap();
+            file.seek(SeekFrom::Start((idx * self.block_size) as u64))
+                .unwrap();
             file.write_all(data.as_slice()).unwrap();
         }
         time::Instant::now() - start_time
@@ -232,7 +260,9 @@ impl DiskBench {
 
         let start_time = time::Instant::now();
         for idx in self.blocks()..0 {
-            let _ = file.seek(SeekFrom::Start((idx * self.block_size) as u64)).unwrap();
+            let _ = file
+                .seek(SeekFrom::Start((idx * self.block_size) as u64))
+                .unwrap();
             file.read_exact(data.as_mut_slice()).unwrap();
         }
         time::Instant::now() - start_time
