@@ -83,7 +83,7 @@ impl DiskBench {
         let start_time = time::Instant::now();
         // from start re-write the file
         for _ in 0..self.blocks() {
-            file.write_all(block_data.as_slice());
+            file.write_all(block_data.as_slice()).unwrap();
         }
         time::Instant::now() - start_time
     }
@@ -213,7 +213,7 @@ impl DiskBench {
     pub fn reverse_write(&self) -> time::Duration {
         let (_, mut file) = self.do_write_file();
 
-        let mut data = Self::gen_block_size_data(self.block_size);
+        let data = Self::gen_block_size_data(self.block_size);
 
         let start_time = time::Instant::now();
         for idx in self.blocks()..0 {
@@ -253,11 +253,11 @@ impl DiskBench {
 
         let start_time = time::Instant::now();
         for _ in 0..self.blocks() {
-            file.write_all(block_data.as_slice());
+            file.write_all(block_data.as_slice()).unwrap();
         }
         let use_time = time::Instant::now() - start_time;
         // set offset to start
-        file.seek(SeekFrom::Start(0));
+        file.seek(SeekFrom::Start(0)).unwrap();
         (use_time, file)
     }
 
