@@ -178,6 +178,8 @@ impl DiskBench {
             file.seek(SeekFrom::Start((v * self.block_size) as u64))
                 .unwrap();
             file.read_exact(data.as_mut_slice()).unwrap();
+            // this is intended to prevent the compiler opt out
+            data.as_mut_slice().fill(0);
         }
         let use_time = time::Instant::now() - start_time;
         println!("随机读测试结束,耗时: {:?}", use_time);
@@ -208,7 +210,7 @@ impl DiskBench {
     pub fn do_stride_write(&self, file: &mut std::fs::File, step: usize, data: &[u8]) {
         let blocks = self.blocks();
         for idx in (0..blocks).step_by(step) {
-            file.seek(SeekFrom::Start((idx * step * self.block_size) as u64))
+            file.seek(SeekFrom::Start((idx * self.block_size) as u64))
                 .unwrap();
             file.write_all(data).unwrap();
         }
@@ -237,7 +239,7 @@ impl DiskBench {
     pub fn do_stride_read(&self, file: &mut std::fs::File, step: usize, data: &mut [u8]) {
         let blocks = self.blocks();
         for idx in (0..blocks).step_by(step) {
-            file.seek(SeekFrom::Start((idx * step * self.block_size) as u64))
+            file.seek(SeekFrom::Start((idx * self.block_size) as u64))
                 .unwrap();
             file.read_exact(data).unwrap();
         }
