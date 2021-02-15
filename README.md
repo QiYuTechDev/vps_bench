@@ -10,6 +10,7 @@
 ![Crates.io](https://img.shields.io/crates/v/vps_bench)
 ![Crates.io](https://img.shields.io/crates/l/vps_bench)
 ![Crates.io](https://img.shields.io/crates/d/vps_bench)
+[![dependency status](https://deps.rs/repo/github/qiyutechdev/vps_bench/status.svg)](https://deps.rs/repo/github/qiyutechdev/vps_bench)
 
 当前支持的测试:
 
