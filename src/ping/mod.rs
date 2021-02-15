@@ -13,7 +13,7 @@ pub struct PingCli {
 impl PingCli {
     /// 运行 Ping 命令
     pub fn run(&self) {
-        println!("测试目标服务器: {}", self.shared.server_url);
+        println!("测试服务器地址: {}", self.shared.server_url);
         if self.shared.app_key.is_empty() {
             eprintln!("没有指定 APP KEY");
             std::process::exit(1)
