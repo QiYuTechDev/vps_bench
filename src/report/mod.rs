@@ -112,7 +112,7 @@ impl<'a> BenchReport<'a> {
         }
 
         match resp.json() {
-            Ok(resp) => return resp,
+            Ok(resp) => resp,
             Err(e) => {
                 eprintln!("解析 JSON 失败 失败: {:?}", e);
                 std::process::exit(1);

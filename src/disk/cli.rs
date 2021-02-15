@@ -70,7 +70,7 @@ impl DiskCli {
         if let Some(reporter) = self.shared.get_reporter(reporter) {
             let form = DiskForm::new(job_id, self.n, result);
             println!("开始上报磁盘测试结果...");
-            reporter.disk_report(form);
+            reporter.disk_report(&form);
             println!("上报磁盘测试结果成功。");
         }
     }

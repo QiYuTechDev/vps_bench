@@ -28,6 +28,6 @@ impl<'a> QuickBench<'a> {
         ram.run(job_id.clone(), reporter.clone());
 
         let cpu: CPUCli = self.quick_cli.into();
-        cpu.run(job_id.clone(), reporter.clone());
+        cpu.run(job_id, reporter.clone());
     }
 }
