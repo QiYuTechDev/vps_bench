@@ -1,6 +1,6 @@
 [package]
 name = "vps_bench"
-version = "0.1.1"
+version = "0.1.2"
 authors = ["dev <dev@qiyutech.tech>"]
 edition = "2018"
 description = "奇遇科技 VPS 性能测试工具"
