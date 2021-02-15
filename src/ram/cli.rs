@@ -37,7 +37,7 @@ impl RAMCli {
     /// 运行 RAM 测试
     pub fn run(&self, job_id: Option<String>, reporter: Option<BenchReport>) {
         let mut ram = RamBench::new(2usize.pow(self.mem as u32));
-        let bench_result: Vec<_> = (0..self.round)
+        let results: Vec<_> = (0..self.round)
             .map(|idx| {
                 println!("第 {} 轮的 内存 测试开始...", idx);
                 let result = ram.run_bench();
@@ -47,12 +47,7 @@ impl RAMCli {
             .collect();
 
         if let Some(reporter) = self.shared.get_reporter(reporter) {
-            let form = RamForm {
-                job_id,
-                mem: self.mem,
-                results: bench_result,
-            };
-
+            let form = RamForm::new(job_id, self.mem, results);
             println!("开始上报 内存 基准测试结果 ...");
             reporter.ram_report(&form);
             println!("上报 内存 基准测试结果 已完成")
