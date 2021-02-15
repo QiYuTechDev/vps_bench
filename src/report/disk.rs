@@ -7,15 +7,13 @@ use crate::disk::DiskResult;
 pub struct DiskForm {
     /// 任务 ID
     pub job_id: Option<String>,
-    /// 文件大小指数
-    pub n: u8,
     /// 结果数据
     pub results: Vec<DiskResult>,
 }
 
 impl DiskForm {
     #[inline]
-    pub fn new(job_id: Option<String>, n: u8, results: Vec<DiskResult>) -> Self {
-        Self { job_id, n, results }
+    pub fn new(job_id: Option<String>, results: Vec<DiskResult>) -> Self {
+        Self { job_id, results }
     }
 }
