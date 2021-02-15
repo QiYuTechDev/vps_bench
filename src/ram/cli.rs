@@ -1,6 +1,6 @@
 use structopt::StructOpt;
 
-pub use super::RAMBench;
+pub use super::RamBench;
 use crate::quick::QuickCli;
 use crate::report::BenchReport;
 use crate::report::RamForm;
@@ -36,7 +36,7 @@ pub struct RAMCli {
 impl RAMCli {
     /// 运行 RAM 测试
     pub fn run(&self, job_id: Option<String>, reporter: Option<BenchReport>) {
-        let mut ram = RAMBench::new(2usize.pow(self.mem as u32));
+        let mut ram = RamBench::new(2usize.pow(self.mem as u32));
         let bench_result: Vec<_> = (0..self.round)
             .map(|idx| {
                 println!("第 {} 轮的 内存 测试开始...", idx);

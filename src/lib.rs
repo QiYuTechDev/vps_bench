@@ -11,7 +11,7 @@ mod shared;
 pub use cpu::{CPUBench, CPUCli};
 pub use disk::{DiskBench, DiskCli};
 pub use quick::{QuickBench, QuickCli};
-pub use ram::{RAMBench, RAMCli};
+pub use ram::{RAMCli, RamBench};
 
 #[derive(Debug, StructOpt)]
 pub enum BenchCli {

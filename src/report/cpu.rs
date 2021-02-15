@@ -7,3 +7,10 @@ pub struct CpuForm {
     pub n: usize,
     pub times: Vec<f64>,
 }
+
+impl CpuForm {
+    #[inline]
+    pub fn new(job_id: Option<String>, n: usize, times: Vec<f64>) -> Self {
+        Self { job_id, n, times }
+    }
+}

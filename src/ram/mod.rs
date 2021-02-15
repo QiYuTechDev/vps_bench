@@ -2,6 +2,6 @@ mod bench;
 mod cli;
 mod result;
 
-pub use bench::RAMBench;
+pub use bench::RamBench;
 pub use cli::RAMCli;
-pub use result::RAMResult;
+pub use result::RamResult;

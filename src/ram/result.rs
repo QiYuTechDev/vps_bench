@@ -3,7 +3,7 @@ use serde::Serialize;
 use crate::shared::IOTime;
 
 #[derive(Debug, Default, Serialize)]
-pub struct RAMResult {
+pub struct RamResult {
     /// 内存大小
     pub mem_size: u64,
     /// 顺序 读写耗时
@@ -12,7 +12,7 @@ pub struct RAMResult {
     pub rand: IOTime,
 }
 
-impl RAMResult {
+impl RamResult {
     #[inline]
     pub fn new(mem_size: u64) -> Self {
         Self {
@@ -23,7 +23,7 @@ impl RAMResult {
     }
 }
 
-impl ToString for RAMResult {
+impl ToString for RamResult {
     fn to_string(&self) -> String {
         format!(
             r#"内存大小: {}

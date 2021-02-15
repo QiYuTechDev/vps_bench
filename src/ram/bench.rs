@@ -3,16 +3,16 @@ use std::time::Instant;
 
 use rand::{Rng, SeedableRng};
 
-use super::RAMResult;
+use super::RamResult;
 use crate::shared::IOTime;
 
 /// RAM 读写速度测试
-pub struct RAMBench {
+pub struct RamBench {
     /// memory 数据
     pub mem: Vec<u8>,
 }
 
-impl RAMBench {
+impl RamBench {
     /// 创建一个新的 RAMBench 测试
     /// `mem_size` 单位为: 128MB
     pub fn new(mem_size: usize) -> Self {
@@ -22,8 +22,8 @@ impl RAMBench {
     }
 
     /// 运行一次性能测试
-    pub fn run_bench(&mut self) -> RAMResult {
-        let mut result = RAMResult::new(self.mem.capacity() as u64);
+    pub fn run_bench(&mut self) -> RamResult {
+        let mut result = RamResult::new(self.mem.capacity() as u64);
 
         result.seq = IOTime::new(self.seq_read_data().0, self.seq_write_data());
         result.rand = IOTime::new(self.rand_read_data().0, self.rand_write_data());
@@ -120,7 +120,7 @@ impl RAMBench {
 
 #[test]
 pub fn test_seq_write_ram() {
-    let mut ram = RAMBench::new(1);
+    let mut ram = RamBench::new(1);
     let use_time = ram.seq_write_data();
     println!("use time: {:?}", use_time);
 }
