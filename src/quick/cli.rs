@@ -10,7 +10,7 @@ pub struct QuickCli {
     #[structopt(long, default_value = "0")]
     pub cpu_n: usize,
     /// CPU 进行多少轮测试
-    #[structopt(long, default_value = "1")]
+    #[structopt(long, default_value = "16")]
     pub cpu_round: usize,
 
     /// 内存测试指定内存的大小
@@ -18,7 +18,7 @@ pub struct QuickCli {
     pub mem_size: u8,
 
     /// 内存进行多少轮测试
-    #[structopt(long, default_value = "1")]
+    #[structopt(long, default_value = "16")]
     pub mem_round: usize,
 
     /// 磁盘测试使用的文件名称{n}

@@ -26,7 +26,7 @@ pub struct RAMCli {
     pub mem: u8,
 
     /// 多少轮测试
-    #[structopt(long, default_value = "1")]
+    #[structopt(long, default_value = "16")]
     pub round: usize,
 
     #[structopt(flatten)]
@@ -39,9 +39,13 @@ impl RAMCli {
         let mut ram = RamBench::new(2usize.pow(self.mem as u32));
         let results: Vec<_> = (0..self.round)
             .map(|idx| {
-                println!("第 {} 轮的 内存 测试开始...", idx);
+                println!("第 {} 轮的 内存 测试开始...", idx + 1);
                 let result = ram.run_bench();
-                println!("第 {} 轮的 内存 测试结束\n{}\n", idx, result.to_string());
+                println!(
+                    "第 {} 轮的 内存 测试结束\n{}\n",
+                    idx + 1,
+                    result.to_string()
+                );
                 result
             })
             .collect();

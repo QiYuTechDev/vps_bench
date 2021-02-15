@@ -18,7 +18,7 @@ pub struct CPUCli {
     pub n: usize,
 
     /// 多少轮测试
-    #[structopt(long, default_value = "1")]
+    #[structopt(long, default_value = "16")]
     pub round: usize,
 
     #[structopt(flatten)]
@@ -31,9 +31,9 @@ impl CPUCli {
 
         let result: Vec<_> = (0..self.round)
             .map(|idx| {
-                println!("第 {} 轮的 CPU 测试开始...", idx);
+                println!("第 {} 轮的 CPU 测试开始...", idx + 1);
                 let (use_time, _) = cpu.run();
-                println!("第 {} 轮的 CPU 测试结束, 使用时间: {:?}", idx, use_time);
+                println!("第 {} 轮的 CPU 测试结束, 使用时间: {:?}", idx + 1, use_time);
                 use_time
             })
             .collect();
