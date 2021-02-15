@@ -11,10 +11,6 @@ homepage = "https://vps.qiyutech.tech/"
 name = "vps_bench"
 path = "src/main.rs"
 
-[[bench]]
-name = "gen_bench"
-harness = false
-
 [dependencies]
 structopt = { version = "0.3" }
 
