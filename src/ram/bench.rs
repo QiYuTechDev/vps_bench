@@ -2,30 +2,9 @@ use std::time;
 use std::time::Instant;
 
 use rand::{Rng, SeedableRng};
-use serde::Serialize;
 
+use super::RAMResult;
 use crate::shared::IOTime;
-
-#[derive(Debug, Default, Serialize)]
-pub struct RAMResult {
-    /// 内存大小
-    pub mem_size: u64,
-    /// 顺序 读写耗时
-    pub seq: IOTime,
-    /// 随机 读写耗时
-    pub rand: IOTime,
-}
-
-impl RAMResult {
-    #[inline]
-    pub fn new(mem_size: u64) -> Self {
-        Self {
-            mem_size,
-            seq: IOTime::default(),
-            rand: IOTime::default(),
-        }
-    }
-}
 
 /// RAM 读写速度测试
 pub struct RAMBench {

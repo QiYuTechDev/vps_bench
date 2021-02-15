@@ -28,15 +28,7 @@ pub struct QuickCli {
 
     /// 磁盘测试实际测试使用的文件大小为 2^n * 1GB
     #[structopt(long, default_value = "0")]
-    pub disk_n: u32,
-
-    #[structopt(long, default_value = "0")]
-    /// 磁盘测试实际测试使用的文件大小为 2^n * 512 B
-    pub disk_block: u32,
-
-    /// 磁盘测试多少轮测试
-    #[structopt(long, default_value = "1")]
-    pub disk_round: usize,
+    pub disk_n: u8,
 
     #[structopt(flatten)]
     pub shared: crate::shared::SharedCli,

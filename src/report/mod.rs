@@ -40,15 +40,23 @@ impl<'a> BenchReport<'a> {
     }
 
     /// 磁盘测试结果上报
-    pub fn disk_report(&self, _job_id: Option<String>) {
-        let _url = self.get_api_url("disk");
+    pub fn disk_report(&self, form: &DiskForm) {
+        let url = self.get_api_url("disk");
+        let resp = self.do_report(url.as_str(), form);
+        if resp.success() {
+            return;
+        }
+        eprintln!(
+            "上报 磁盘 基准测试结果失败 错误码 {}, 错误信息: {}",
+            resp.errno, resp.errmsg
+        );
+        std::process::exit(1);
     }
 
     /// CPU 测试结果上报
     pub fn cpu_report(&self, form: &CpuForm) {
         let url = self.get_api_url("cpu");
-        let builder = self.build_post_request(url.as_str(), form);
-        let resp = Self::send_request::<ReportResp>(builder, url.as_str());
+        let resp = self.do_report(url.as_str(), form);
         if resp.success() {
             return;
         }
@@ -62,8 +70,7 @@ impl<'a> BenchReport<'a> {
     /// 内存测试结果上报
     pub fn ram_report(&self, form: &RamForm) {
         let url = self.get_api_url("ram");
-        let builder = self.build_post_request(url.as_str(), form);
-        let resp = Self::send_request::<ReportResp>(builder, url.as_str());
+        let resp = self.do_report(url.as_str(), form);
         if resp.success() {
             return;
         }
@@ -72,6 +79,12 @@ impl<'a> BenchReport<'a> {
             resp.errno, resp.errmsg
         );
         std::process::exit(1);
+    }
+
+    /// 上报 `form` 数据到 `url`
+    fn do_report<T: serde::Serialize>(&self, url: &str, form: &T) -> ReportResp {
+        let builder = self.build_post_request(url, form);
+        Self::send_request::<ReportResp>(builder, url)
     }
 
     /// 测试 app key 在服务器上是否有效

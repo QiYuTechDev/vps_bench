@@ -1,6 +1,5 @@
 use super::QuickCli;
 
-use crate::report::BenchReport;
 use crate::{CPUCli, DiskCli, RAMCli};
 
 pub struct QuickBench<'a> {
@@ -23,7 +22,7 @@ impl<'a> QuickBench<'a> {
         };
 
         let disk: DiskCli = self.quick_cli.into();
-        disk.run(reporter.clone());
+        disk.run(job_id.clone(), reporter.clone());
 
         let ram: RAMCli = self.quick_cli.into();
         ram.run(job_id.clone(), reporter.clone());

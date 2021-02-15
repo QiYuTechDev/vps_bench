@@ -7,6 +7,9 @@ use crate::report::{BenchReport, CpuForm};
 #[derive(Debug, StructOpt)]
 #[structopt(name = "ram")]
 /// 测试 CPU 的性能{n}
+///
+/// 测试结果使用相对值进行比较,绝对值并没有什么实际意义。
+///
 /// 当前仅仅支持 sqrt 性能测试{n}
 /// 在相同的参数下,使用的时间越少越好
 pub struct CPUCli {

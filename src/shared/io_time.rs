@@ -20,3 +20,9 @@ impl IOTime {
         }
     }
 }
+
+impl ToString for IOTime {
+    fn to_string(&self) -> String {
+        format!("读取: {} 写入: {}", self.read, self.write)
+    }
+}

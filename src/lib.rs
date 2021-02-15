@@ -29,7 +29,7 @@ impl BenchCli {
     pub fn run(&self) {
         match self {
             BenchCli::CPU(cpu) => cpu.run(None, None),
-            BenchCli::Disk(disk) => disk.run(None),
+            BenchCli::Disk(disk) => disk.run(None, None),
             BenchCli::RAM(ram) => ram.run(None, None),
             BenchCli::Quick(quick) => quick.run(),
         }

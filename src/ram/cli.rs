@@ -9,6 +9,8 @@ use crate::report::RamForm;
 #[structopt(name = "ram")]
 /// 内存性能测试
 ///
+/// 测试结果使用相对值进行比较,绝对值并没有什么实际意义。
+///
 /// `mem` 指定内存大小 {n}
 /// 注意: 实际使用的内存大小为: 2^mem * 128MB {n}
 /// 0 表示使用  128MB {n}
@@ -39,8 +41,7 @@ impl RAMCli {
             .map(|idx| {
                 println!("第 {} 轮的 内存 测试开始...", idx);
                 let result = ram.run_bench();
-                // todo pretty print
-                println!("第 {} 轮的 内存 测试结束, 使用时间: {:?}", idx, result);
+                println!("第 {} 轮的 内存 测试结束\n{}\n", idx, result.to_string());
                 result
             })
             .collect();

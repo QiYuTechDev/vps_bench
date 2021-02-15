@@ -3,41 +3,8 @@ use std::time;
 
 use rand::{Rng, SeedableRng};
 
+use super::DiskResult;
 use crate::shared::IOTime;
-
-/// 磁盘性能测试结果
-#[derive(Debug, Default)]
-pub struct DiskResult {
-    /// 文件大小
-    file_size: usize,
-    /// 记录块大小
-    block_size: usize,
-    /// 顺序 读/写 测试结果
-    seq: IOTime,
-    /// 顺序 重 读/写 测试结果
-    seq_re: IOTime,
-    /// 随机 读/写 测试结果
-    rand: IOTime,
-    /// 跳 读/写 测试结果
-    stride: IOTime,
-    /// 倒 读/写 测试结果
-    reverse: IOTime,
-}
-
-impl DiskResult {
-    #[inline]
-    pub fn new(file_size: usize, block_size: usize) -> Self {
-        Self {
-            file_size,
-            block_size,
-            seq: IOTime::default(),
-            seq_re: IOTime::default(),
-            rand: IOTime::default(),
-            stride: IOTime::default(),
-            reverse: IOTime::default(),
-        }
-    }
-}
 
 /// 磁盘性能测试
 pub struct DiskBench {
