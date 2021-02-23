@@ -28,7 +28,7 @@ impl SharedCli {
 
         match other {
             Some(reporter) => Some(reporter),
-            None => Some(BenchReport::new(self)),
+            None => Some(BenchReport::new(self, false)),
         }
     }
 }

@@ -26,8 +26,8 @@ pub struct BenchReport<'a> {
 
 impl<'a> BenchReport<'a> {
     #[inline]
-    pub fn new(cli: &'a SharedCli) -> Self {
-        Self::test_app_key_valid(cli);
+    pub fn new(cli: &'a SharedCli, print_user: bool) -> Self {
+        Self::test_app_key_valid(cli, print_user);
 
         BenchReport { cli }
     }
@@ -104,11 +104,13 @@ impl<'a> BenchReport<'a> {
 
     /// 测试 app key 在服务器上是否有效
     /// app key 无效则直接退出
-    fn test_app_key_valid(cli: &SharedCli) {
+    fn test_app_key_valid(cli: &SharedCli, print_user: bool) {
         let url = Self::format_url(cli.server_url.as_str(), "ping");
         let builder = Self::add_header(Client::new().get(url.as_str()), cli.app_key.as_str());
         let msg = Self::send_request::<PingResp>(builder, url.as_str());
-        println!("当前使用的用户是: {}", msg.username);
+        if print_user {
+            println!("当前使用的用户是: {}", msg.username);
+        }
     }
 
     /// 发送请求

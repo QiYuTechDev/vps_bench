@@ -11,7 +11,7 @@ mod sqlite_db;
 
 pub use cpu::{CPUBench, CPUCli};
 pub use disk::{DiskBench, DiskCli};
-pub use ping::PingCli;
+pub use ping::{JobCli, PingCli};
 pub use quick::{QuickBench, QuickCli};
 pub use ram::{RAMCli, RamBench};
 pub use sqlite_db::SQLiteCli;
@@ -31,6 +31,8 @@ pub enum BenchCli {
     Quick(QuickCli),
     /// 测试 APP KEY 是否有效
     Ping(PingCli),
+    /// 获取新的任务
+    Job(JobCli),
 }
 
 impl BenchCli {
@@ -44,6 +46,7 @@ impl BenchCli {
             }),
             BenchCli::Quick(quick) => quick.run(),
             BenchCli::Ping(ping) => ping.run(),
+            BenchCli::Job(job) => job.run(),
         }
     }
 }

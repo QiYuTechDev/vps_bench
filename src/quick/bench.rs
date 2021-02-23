@@ -15,7 +15,10 @@ impl<'a> QuickBench<'a> {
     /// 运行快速测试
     pub fn run_bench(&'a self) {
         let reporter = self.quick_cli.shared.get_reporter(None);
-        let job_id = if let Some(ref r) = reporter {
+
+        let job_id = if self.quick_cli.job_id.is_some() {
+            self.quick_cli.job_id.clone()
+        } else if let Some(ref r) = reporter {
             Some(r.new_job())
         } else {
             None

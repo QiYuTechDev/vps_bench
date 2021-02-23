@@ -34,6 +34,10 @@ pub struct QuickCli {
     /// SQLite 测试多少使用多少 百万行数据
     pub sqlite_n: usize,
 
+    #[structopt(long)]
+    /// 指定任务 ID
+    pub job_id: Option<String>,
+
     #[structopt(flatten)]
     pub shared: crate::shared::SharedCli,
 }
