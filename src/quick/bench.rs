@@ -1,6 +1,6 @@
 use super::QuickCli;
 
-use crate::{CPUCli, DiskCli, RAMCli};
+use crate::{CPUCli, DiskCli, RAMCli, SQLiteCli};
 
 pub struct QuickBench<'a> {
     quick_cli: &'a QuickCli,
@@ -28,6 +28,10 @@ impl<'a> QuickBench<'a> {
         ram.run(job_id.clone(), reporter.clone());
 
         let cpu: CPUCli = self.quick_cli.into();
-        cpu.run(job_id, reporter.clone());
+        cpu.run(job_id.clone(), reporter.clone());
+
+        let sqlite: SQLiteCli = self.quick_cli.into();
+
+        futures::executor::block_on(async move { sqlite.run(job_id, reporter).await });
     }
 }

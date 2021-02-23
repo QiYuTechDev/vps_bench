@@ -2,18 +2,19 @@ use structopt::StructOpt;
 
 mod cpu;
 mod disk;
-mod network;
 mod ping;
 mod quick;
 mod ram;
 mod report;
 mod shared;
+mod sqlite_db;
 
 pub use cpu::{CPUBench, CPUCli};
 pub use disk::{DiskBench, DiskCli};
 pub use ping::PingCli;
 pub use quick::{QuickBench, QuickCli};
 pub use ram::{RAMCli, RamBench};
+pub use sqlite_db::SQLiteCli;
 
 #[derive(Debug, StructOpt)]
 pub enum BenchCli {
@@ -23,6 +24,9 @@ pub enum BenchCli {
     Disk(DiskCli),
     /// 内存测试
     RAM(RAMCli),
+    /// SQLite 事务测试
+    #[structopt(name = "sqlite")]
+    SQLite(SQLiteCli),
     /// VPS 性能 快速测试, 当前会测试: CPU/内存/磁盘
     Quick(QuickCli),
     /// 测试 APP KEY 是否有效
@@ -30,11 +34,14 @@ pub enum BenchCli {
 }
 
 impl BenchCli {
-    pub fn run(&self) {
+    pub fn run(self) {
         match self {
             BenchCli::CPU(cpu) => cpu.run(None, None),
             BenchCli::Disk(disk) => disk.run(None, None),
             BenchCli::RAM(ram) => ram.run(None, None),
+            BenchCli::SQLite(db) => futures::executor::block_on(async move {
+                db.run(None, None).await;
+            }),
             BenchCli::Quick(quick) => quick.run(),
             BenchCli::Ping(ping) => ping.run(),
         }

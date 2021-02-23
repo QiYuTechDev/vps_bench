@@ -16,6 +16,7 @@ pub use ram::RamForm;
 pub use shared::ReportResp;
 
 use crate::shared::SharedCli;
+use crate::sqlite_db::SQLiteForm;
 
 /// 测试结果上报
 #[derive(Clone)]
@@ -62,6 +63,20 @@ impl<'a> BenchReport<'a> {
         }
         eprintln!(
             "上报 CPU 基准测试结果失败 错误码 {}, 错误信息: {}",
+            resp.errno, resp.errmsg
+        );
+        std::process::exit(1);
+    }
+
+    pub fn sqlite_report(&self, form: &SQLiteForm) {
+        let url = self.get_api_url("sqlite");
+        let resp = self.do_report(url.as_str(), form);
+        if resp.success() {
+            return;
+        }
+
+        eprintln!(
+            "上报 SQLite 基准测试结果失败 错误码 {}, 错误信息: {}",
             resp.errno, resp.errmsg
         );
         std::process::exit(1);

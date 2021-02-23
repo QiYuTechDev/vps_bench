@@ -21,7 +21,7 @@ pub struct QuickCli {
     #[structopt(long, default_value = "16")]
     pub mem_round: usize,
 
-    /// 磁盘测试使用的文件名称{n}
+    /// 磁盘/SQLite 测试使用的文件名称{n}
     /// 注意: 如果这个文件存在则会被删除
     #[structopt(long)]
     pub disk_file_name: String,
@@ -29,6 +29,10 @@ pub struct QuickCli {
     /// 磁盘测试实际测试使用的文件大小为 2^n * 1GB
     #[structopt(long, default_value = "0")]
     pub disk_n: u8,
+
+    #[structopt(long, default_value = "1")]
+    /// SQLite 测试多少使用多少 百万行数据
+    pub sqlite_n: usize,
 
     #[structopt(flatten)]
     pub shared: crate::shared::SharedCli,

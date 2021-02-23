@@ -17,11 +17,11 @@
 * CPU
 * 内存
 * 磁盘
+* 网络 (参见: vps_network 项目)
+* SQLite3
 
 等待添加的:
 
-* 网络 (call vps_network)
-* Sqlite3
 * MySQL
 * PostgreSQL
 
