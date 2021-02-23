@@ -4,14 +4,14 @@ use structopt::StructOpt;
 #[derive(Debug, StructOpt, Clone)]
 pub struct SharedCli {
     /// 遥测信息不上报
-    #[structopt(long, env = "VPS_BENCH_NO_TELEMETRY", hidden = true)]
+    #[structopt(long, env = "BENCH_NO_TELEMETRY", hidden = true)]
     pub no_telemetry: bool,
-    #[structopt(long, env = "VPS_BENCH_APP_KEY", default_value = "")]
+    #[structopt(long, env = "BENCH_APP_KEY", default_value = "")]
     /// 设置 app-key 则会上报数据到服务器
     pub app_key: String,
     #[structopt(
         long,
-        env = "VPS_BENCH_SERVER_URL",
+        env = "BENCH_SERVER_URL",
         default_value = "https://vps.qiyutech.tech/api/bench/v1/",
         hidden = true
     )]
