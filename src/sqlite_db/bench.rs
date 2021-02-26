@@ -28,7 +28,7 @@ impl SQLiteBench {
         let conn = SqliteConnection::connect_with(&option).await.unwrap();
         Self {
             conn,
-            n: n * 1_000_000,
+            n: n * 100_000,
         }
     }
 
