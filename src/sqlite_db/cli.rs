@@ -23,7 +23,7 @@ pub struct SQLiteCli {
 
 impl SQLiteCli {
     /// 运行 RAM 测试
-    pub async fn run<'a>(&self, job_id: Option<String>, reporter: Option<BenchReport<'a>>) {
+    pub async fn run(&self, job_id: Option<String>, reporter: Option<BenchReport<'_>>) {
         let db = SQLiteBench::new(self.file.as_str(), self.n).await;
 
         let result = db.run().await;
