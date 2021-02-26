@@ -258,9 +258,6 @@ impl DiskRawBench {
         #[cfg(target_os = "linux")]
         options.custom_flags(libc::O_DIRECT);
 
-        #[cfg(unix)]
-        options.custom_flags(libc::O_SYNC);
-
         options.open(self.file_name.as_str()).expect("打开文件失败")
     }
 
@@ -278,9 +275,6 @@ impl DiskRawBench {
 
             #[cfg(target_os = "linux")]
             options.custom_flags(libc::O_DIRECT);
-
-            #[cfg(unix)]
-            options.custom_flags(libc::O_SYNC);
 
             options.open(self.file_name.as_str()).expect("打开文件失败")
         };
