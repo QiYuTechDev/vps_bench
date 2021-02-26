@@ -32,7 +32,7 @@ impl DiskCli {
     pub fn run(&self, job_id: Option<String>, reporter: Option<BenchReport>) {
         let mut result = Vec::new();
 
-        for file_exp in (0..12).rev() {
+        for file_exp in (0..1).rev() {
             let file_size = 2usize.pow(self.n as u32 + 32 - file_exp);
             // 对于 128MB 以下的文件不进行测试
             if file_size < 128 * 1024 * 1024 {
