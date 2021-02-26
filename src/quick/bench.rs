@@ -1,8 +1,13 @@
 use super::QuickCli;
 
+#[cfg(target_os = "macos")]
+use crate::DiskCli;
+#[cfg(target_os = "windows")]
+use crate::DiskCli;
 #[cfg(target_os = "linux")]
 use crate::DiskRawCli;
-use crate::{CPUCli, DiskCli, RAMCli, SQLiteCli};
+
+use crate::{CPUCli, RAMCli, SQLiteCli};
 
 pub struct QuickBench<'a> {
     quick_cli: &'a QuickCli,
