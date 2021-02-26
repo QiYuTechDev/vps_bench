@@ -193,18 +193,9 @@ impl SQLiteBench {
             let mut sample = rng.sample_iter(Alphanumeric);
 
             move || -> String {
-                let mut d = [0u8; 32];
-                let mut idx = 0;
-
-                while let Some(v) = sample.next() {
-                    d[idx] = v;
-                    idx += 1;
-                    if idx == 32 {
-                        return String::from_utf8(d.to_vec()).unwrap();
-                    }
-                }
-
-                panic!("生成字符串失败")
+                let o = &mut sample;
+                let v = o.take(32).collect::<Vec<_>>();
+                String::from_utf8(v).unwrap()
             }
         };
 
@@ -247,18 +238,9 @@ impl SQLiteBench {
             let mut sample = rng.sample_iter(Alphanumeric);
 
             move || -> String {
-                let mut d = [0u8; 32];
-                let mut idx = 0;
-
-                while let Some(v) = sample.next() {
-                    d[idx] = v;
-                    idx += 1;
-                    if idx == 32 {
-                        return String::from_utf8(d.to_vec()).unwrap();
-                    }
-                }
-
-                panic!("生成字符串失败")
+                let o = &mut sample;
+                let v = o.take(32).collect::<Vec<_>>();
+                String::from_utf8(v).unwrap()
             }
         };
 
@@ -297,18 +279,9 @@ impl SQLiteBench {
             let mut sample = rng.sample_iter(Alphanumeric);
 
             move || -> String {
-                let mut d = [0u8; 32];
-                let mut idx = 0;
-
-                while let Some(v) = sample.next() {
-                    d[idx] = v;
-                    idx += 1;
-                    if idx == 32 {
-                        return String::from_utf8(d.to_vec()).unwrap();
-                    }
-                }
-
-                panic!("生成字符串失败")
+                let o = &mut sample;
+                let v = o.take(32).collect::<Vec<_>>();
+                String::from_utf8(v).unwrap()
             }
         };
 
