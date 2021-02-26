@@ -1,5 +1,7 @@
 use super::QuickCli;
 
+#[cfg(target_os = "linux")]
+use crate::DiskRawCli;
 use crate::{CPUCli, DiskCli, RAMCli, SQLiteCli};
 
 pub struct QuickBench<'a> {
@@ -24,8 +26,17 @@ impl<'a> QuickBench<'a> {
             None
         };
 
-        let disk: DiskCli = self.quick_cli.into();
-        disk.run(job_id.clone(), reporter.clone());
+        #[cfg(target_os = "linux")]
+        {
+            let disk: DiskRawCli = self.quick_cli.into();
+            disk.run(job_id.clone(), reporter.clone());
+        }
+
+        #[cfg(any(target_os = "windows", target_os = "macos"))]
+        {
+            let disk: DiskCli = self.quick_cli.into();
+            disk.run(job_id.clone(), reporter.clone());
+        }
 
         let ram: RAMCli = self.quick_cli.into();
         ram.run(job_id.clone(), reporter.clone());

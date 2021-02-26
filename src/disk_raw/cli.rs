@@ -1,6 +1,6 @@
 use structopt::StructOpt;
 
-use super::DiskBench;
+use super::DiskRawBench;
 use crate::quick::QuickCli;
 use crate::report::{BenchReport, DiskForm};
 
@@ -12,7 +12,7 @@ use crate::report::{BenchReport, DiskForm};
 /// 默认是: 1GB
 ///
 /// 在相同的参数下,使用的时间越少越好
-pub struct DiskCli {
+pub struct DiskRawCli {
     #[structopt(long)]
     /// 测试使用的文件名称{n}
     /// 注意: 如果这个文件存在则会被删除
@@ -40,7 +40,7 @@ pub struct DiskCli {
     pub shared: crate::shared::SharedCli,
 }
 
-impl DiskCli {
+impl DiskRawCli {
     /// 运行磁盘性能测试
     pub fn run(&self, job_id: Option<String>, reporter: Option<BenchReport>) {
         let mut result = Vec::new();
@@ -59,7 +59,7 @@ impl DiskCli {
                     "磁盘测试开始, 文件大小: {}, 记录块大小: {}",
                     file_size, block_size
                 );
-                let disk = DiskBench::new(self.file_name.clone(), file_size, block_size);
+                let disk = DiskRawBench::new(self.file_name.clone(), file_size, block_size);
                 let ret = disk.run_bench();
                 println!("磁盘测试结束:\n{}\n", ret.to_string());
                 result.push(ret);
@@ -76,7 +76,7 @@ impl DiskCli {
     }
 }
 
-impl From<&QuickCli> for DiskCli {
+impl From<&QuickCli> for DiskRawCli {
     fn from(q: &QuickCli) -> Self {
         Self {
             file_name: q.disk_file_name.clone(),
