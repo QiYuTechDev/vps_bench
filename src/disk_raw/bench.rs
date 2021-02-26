@@ -253,7 +253,7 @@ impl DiskRawBench {
         crate::shared::create_large_file_fast(self.file_name.as_str(), self.file_size as u64);
 
         let mut options = std::fs::OpenOptions::new();
-        options.write(true).read(true).create_new(true);
+        options.write(true).read(true);
 
         #[cfg(target_os = "linux")]
         options.custom_flags(libc::O_DIRECT);
