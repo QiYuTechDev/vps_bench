@@ -5,7 +5,7 @@ RUN curl --proto '=https' -sSf https://sh.rustup.rs | sh -s -- --default-toolcha
 ENV PATH="/root/.cargo/bin:${PATH}"
 RUN rustup toolchain install stable --allow-downgrade --profile minimal
 
-RUN apt install -y gcc pkg-config
+RUN apt install -y gcc pkg-config libssl-dev
 
 COPY . /app
 RUN cd /app && cargo build --release
