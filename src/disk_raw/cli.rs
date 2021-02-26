@@ -31,24 +31,17 @@ impl DiskRawCli {
     pub fn run(&self, job_id: Option<String>, reporter: Option<BenchReport>) {
         let mut result = Vec::new();
 
-        for file_exp in (0..1).rev() {
-            let file_size = 2usize.pow(self.n as u32 + 32 - file_exp);
-            // 对于 128MB 以下的文件不进行测试
-            if file_size < 128 * 1024 * 1024 {
-                continue;
-            }
+        let file_size = 2usize.pow(self.n as u32 + 32);
+        let block_size = 4096; // 4KB
 
-            let block_size = 4096; // 4KB
-
-            println!(
-                "磁盘测试开始, 文件大小: {}, 记录块大小: {}",
-                file_size, block_size
-            );
-            let disk = DiskRawBench::new(self.file_name.clone(), file_size, block_size);
-            let ret = disk.run_bench();
-            println!("磁盘测试结束:\n{}\n", ret.to_string());
-            result.push(ret);
-        }
+        println!(
+            "磁盘测试开始, 文件大小: {}, 记录块大小: {}",
+            file_size, block_size
+        );
+        let disk = DiskRawBench::new(self.file_name.clone(), file_size, block_size);
+        let ret = disk.run_bench();
+        println!("磁盘测试结束:\n{}\n", ret.to_string());
+        result.push(ret);
 
         // report disk bench result
         if let Some(reporter) = self.shared.get_reporter(reporter) {

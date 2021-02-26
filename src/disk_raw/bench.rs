@@ -57,6 +57,8 @@ impl DiskRawBench {
 
         let mut data = Self::gen_block_size_data(self.block_size);
 
+        assert_ne!(data.len(), 0);
+
         let start_time = time::Instant::now();
         for _ in 0..self.blocks() {
             file.read_exact(data.as_mut_slice()).unwrap();
