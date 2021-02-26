@@ -13,6 +13,7 @@ pub struct SharedCli {
     ///
     /// 如果设置此目录，则会把结果信息写入到这个目录中{n}
     /// 注意: 请确保目录有写入权限。
+    #[structopt(long)]
     pub out_dir: Option<String>,
     #[structopt(
         long,
