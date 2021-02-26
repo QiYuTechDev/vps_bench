@@ -19,20 +19,6 @@ pub struct DiskCli {
     pub file_name: String,
 
     /// 实际测试使用的文件最大为 2^n * 1GB{n}
-    /// 然后取:{n}
-    /// size / 2 ^  0 GB{n}
-    /// size / 2 ^  1 GB{n}
-    /// size / 2 ^  2 GB{n}
-    /// size / 2 ^  3 GB{n}
-    /// size / 2 ^  4 GB{n}
-    /// size / 2 ^  5 GB{n}
-    /// size / 2 ^  6 GB{n}
-    /// size / 2 ^  7 GB{n}
-    /// size / 2 ^  8 GB{n}
-    /// size / 2 ^  9 GB{n}
-    /// size / 2 ^ 10 GB{n}
-    /// size / 2 ^ 11 GB{n}
-    /// 进行测试
     #[structopt(long, default_value = "0")]
     pub n: u8,
 
@@ -47,6 +33,10 @@ impl DiskCli {
 
         for file_exp in (0..12).rev() {
             let file_size = 2usize.pow(self.n as u32 + 30 - file_exp);
+            // 对于 16MB 以下的文件不进行测试
+            if file_size < 16 * 1024 * 1024 {
+                continue;
+            }
 
             // 实际测试使用的记录块大小为
             //   2K   4K   8K  16K
