@@ -27,10 +27,6 @@ sqlx = { version = "0.5", features = ["sqlite", "runtime-tokio-native-tls"] }
 futures = { version = "0.3" }
 tokio = { version = "1.2", features = ["full"] }
 
-# for TEXT UI
-crossterm = "0.18"
-tui = { version = "0.14", default-features = false, features = ['crossterm'] }
-
 libc = "0.2"
 
 [dev-dependencies]
