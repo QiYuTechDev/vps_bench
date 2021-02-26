@@ -53,7 +53,7 @@ impl RAMCli {
         if let Some(reporter) = self.shared.get_reporter(reporter) {
             let form = RamForm::new(job_id, self.mem, results);
             println!("开始上报 内存 基准测试结果 ...");
-            reporter.ram_report(&form);
+            reporter.ram_report(self.shared.out_dir.as_deref(), &form);
             println!("上报 内存 基准测试结果 已完成")
         }
     }

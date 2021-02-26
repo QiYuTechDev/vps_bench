@@ -9,6 +9,11 @@ pub struct SharedCli {
     #[structopt(long, env = "BENCH_APP_KEY", default_value = "")]
     /// 设置 app-key 则会上报数据到服务器
     pub app_key: String,
+    /// 测试结果文件输出目录
+    ///
+    /// 如果设置此目录，则会把结果信息写入到这个目录中{n}
+    /// 注意: 请确保目录有写入权限。
+    pub out_dir: Option<String>,
     #[structopt(
         long,
         env = "BENCH_SERVER_URL",

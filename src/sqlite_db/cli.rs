@@ -35,7 +35,7 @@ impl SQLiteCli {
                 result,
             };
 
-            reporter.sqlite_report(&form)
+            reporter.sqlite_report(self.shared.out_dir.as_deref(), &form)
         }
     }
 }

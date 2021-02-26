@@ -42,7 +42,7 @@ impl CPUCli {
             let times: Vec<_> = result.iter().map(|d| d.as_secs_f64()).collect();
             let form = CpuForm::new(job_id, self.n, times);
             println!("开始上报 CPU 基准测试结果 ...");
-            reporter.cpu_report(&form);
+            reporter.cpu_report(self.shared.out_dir.as_deref(), &form);
             println!("上报 CPU 基准测试结果 已完成")
         }
     }

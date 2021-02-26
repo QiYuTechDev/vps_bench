@@ -41,7 +41,9 @@ impl<'a> BenchReport<'a> {
     }
 
     /// 磁盘测试结果上报
-    pub fn disk_report(&self, form: &DiskForm) {
+    pub fn disk_report(&self, out_dir: Option<&str>, form: &DiskForm) {
+        self.do_write_to_file(out_dir, "disk.json", form);
+
         let url = self.get_api_url("disk");
         let resp = self.do_report(url.as_str(), form);
         if resp.success() {
@@ -55,7 +57,9 @@ impl<'a> BenchReport<'a> {
     }
 
     /// CPU 测试结果上报
-    pub fn cpu_report(&self, form: &CpuForm) {
+    pub fn cpu_report(&self, out_dir: Option<&str>, form: &CpuForm) {
+        self.do_write_to_file(out_dir, "cpu.json", form);
+
         let url = self.get_api_url("cpu");
         let resp = self.do_report(url.as_str(), form);
         if resp.success() {
@@ -68,7 +72,9 @@ impl<'a> BenchReport<'a> {
         std::process::exit(1);
     }
 
-    pub fn sqlite_report(&self, form: &SQLiteForm) {
+    pub fn sqlite_report(&self, out_dir: Option<&str>, form: &SQLiteForm) {
+        self.do_write_to_file(out_dir, "sqlite.json", form);
+
         let url = self.get_api_url("sqlite");
         let resp = self.do_report(url.as_str(), form);
         if resp.success() {
@@ -83,7 +89,9 @@ impl<'a> BenchReport<'a> {
     }
 
     /// 内存测试结果上报
-    pub fn ram_report(&self, form: &RamForm) {
+    pub fn ram_report(&self, out_dir: Option<&str>, form: &RamForm) {
+        self.do_write_to_file(out_dir, "ram.json", form);
+
         let url = self.get_api_url("ram");
         let resp = self.do_report(url.as_str(), form);
         if resp.success() {
@@ -94,6 +102,15 @@ impl<'a> BenchReport<'a> {
             resp.errno, resp.errmsg
         );
         std::process::exit(1);
+    }
+
+    /// 写入到目录中
+    fn do_write_to_file<T: serde::Serialize>(&self, out_dir: Option<&str>, file: &str, form: &T) {
+        if let Some(o) = out_dir {
+            let file = format!("{}/{}", o, file);
+            let content = serde_json::to_string_pretty(form).unwrap();
+            std::fs::write(file, content).unwrap();
+        }
     }
 
     /// 上报 `form` 数据到 `url`
