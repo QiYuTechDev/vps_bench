@@ -1,5 +1,6 @@
 mod cli;
 mod io_time;
+pub(crate) mod utils;
 
 use std::time;
 
@@ -7,6 +8,7 @@ use rand::{Rng, SeedableRng};
 
 pub use cli::SharedCli;
 pub use io_time::IOTime;
+pub use utils::create_large_file_fast;
 
 #[inline(never)]
 /// 生成 `n` 个 `f32` 类型随机数的时间

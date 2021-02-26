@@ -1,8 +1,9 @@
 use structopt::StructOpt;
 
-use super::DiskBench;
 use crate::quick::QuickCli;
 use crate::report::{BenchReport, DiskForm};
+
+use super::DiskBench;
 
 #[derive(Debug, StructOpt)]
 #[structopt(name = "ram")]
@@ -18,7 +19,7 @@ pub struct DiskCli {
     /// 注意: 如果这个文件存在则会被删除
     pub file_name: String,
 
-    /// 实际测试使用的文件最大为 2^n * 1GB{n}
+    /// 实际测试使用的文件最大为 2^n * 4GB
     #[structopt(long, default_value = "0")]
     pub n: u8,
 
@@ -32,28 +33,22 @@ impl DiskCli {
         let mut result = Vec::new();
 
         for file_exp in (0..12).rev() {
-            let file_size = 2usize.pow(self.n as u32 + 30 - file_exp);
-            // 对于 16MB 以下的文件不进行测试
-            if file_size < 16 * 1024 * 1024 {
+            let file_size = 2usize.pow(self.n as u32 + 32 - file_exp);
+            // 对于 128MB 以下的文件不进行测试
+            if file_size < 128 * 1024 * 1024 {
                 continue;
             }
 
-            // 实际测试使用的记录块大小为
-            //   2K   4K   8K  16K
-            //  32K  64K 128K 256K
-            //  512K  1M   2M   4M
-            for block_exp in 11..23 {
-                let block_size = 2usize.pow(block_exp);
+            let block_size = 4096; // 4KB
 
-                println!(
-                    "磁盘测试开始, 文件大小: {}, 记录块大小: {}",
-                    file_size, block_size
-                );
-                let disk = DiskBench::new(self.file_name.clone(), file_size, block_size);
-                let ret = disk.run_bench();
-                println!("磁盘测试结束:\n{}\n", ret.to_string());
-                result.push(ret);
-            }
+            println!(
+                "磁盘测试开始, 文件大小: {}, 记录块大小: {}",
+                file_size, block_size
+            );
+            let disk = DiskBench::new(self.file_name.clone(), file_size, block_size);
+            let ret = disk.run_bench();
+            println!("磁盘测试结束:\n{}\n", ret.to_string());
+            result.push(ret);
         }
 
         // report disk bench result

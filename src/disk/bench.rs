@@ -52,7 +52,7 @@ impl DiskBench {
     /// 顺序 读
     #[inline(never)]
     pub fn seq_read(&self) -> time::Duration {
-        let (_, mut file) = self.do_write_file();
+        let mut file = self.create_file();
 
         let mut data = Self::gen_block_size_data(self.block_size);
 
@@ -68,7 +68,7 @@ impl DiskBench {
     /// 顺序 重写
     #[inline(never)]
     pub fn seq_re_write(&self) -> time::Duration {
-        let (_, mut file) = self.do_write_file();
+        let mut file = self.create_file();
 
         let block_data = Self::gen_block_size_data(self.block_size);
 
@@ -85,7 +85,7 @@ impl DiskBench {
     /// 顺序 重读
     #[inline(never)]
     pub fn seq_re_read(&self) -> time::Duration {
-        let (_, mut file) = self.do_write_file();
+        let mut file = self.create_file();
 
         let mut data = Self::gen_block_size_data(self.block_size);
 
@@ -109,7 +109,7 @@ impl DiskBench {
     /// 随机 写
     #[inline(never)]
     pub fn rand_write(&self) -> time::Duration {
-        let (_, mut file) = self.do_write_file();
+        let mut file = self.create_file();
 
         let mut rng = rand::rngs::SmallRng::from_entropy();
         let data = Self::gen_block_size_data(self.block_size);
@@ -132,7 +132,7 @@ impl DiskBench {
     /// 随机 读
     #[inline(never)]
     pub fn rand_read(&self) -> time::Duration {
-        let (_, mut file) = self.do_write_file();
+        let mut file = self.create_file();
         let mut data = Self::gen_block_size_data(self.block_size);
         let mut rng = rand::rngs::SmallRng::from_entropy();
 
@@ -156,7 +156,7 @@ impl DiskBench {
     /// 跳 写
     #[inline(never)]
     pub fn stride_write(&self) -> time::Duration {
-        let (_, mut file) = self.do_write_file();
+        let mut file = self.create_file();
 
         let data = Self::gen_block_size_data(self.block_size);
 
@@ -186,7 +186,7 @@ impl DiskBench {
     /// 跳 读
     #[inline(never)]
     pub fn stride_read(&self) -> time::Duration {
-        let (_, mut file) = self.do_write_file();
+        let mut file = self.create_file();
 
         let mut data = Self::gen_block_size_data(self.block_size);
         let start_time = time::Instant::now();
@@ -215,7 +215,7 @@ impl DiskBench {
     /// 倒 写
     #[inline(never)]
     pub fn reverse_write(&self) -> time::Duration {
-        let (_, mut file) = self.do_write_file();
+        let mut file = self.create_file();
 
         let data = Self::gen_block_size_data(self.block_size);
 
@@ -233,7 +233,7 @@ impl DiskBench {
     /// 倒 读
     #[inline(never)]
     pub fn reverse_read(&self) -> time::Duration {
-        let (_, mut file) = self.do_write_file();
+        let mut file = self.create_file();
 
         let mut data = Self::gen_block_size_data(self.block_size);
 
@@ -246,6 +246,17 @@ impl DiskBench {
         let use_time = time::Instant::now() - start_time;
         println!("倒读测试结束,耗时: {:?}", use_time);
         use_time
+    }
+
+    fn create_file(&self) -> std::fs::File {
+        crate::shared::create_large_file_fast(self.file_name.as_str(), self.file_size as u64);
+
+        std::fs::OpenOptions::new()
+            .write(true)
+            .read(true)
+            .create_new(true)
+            .open(self.file_name.as_str())
+            .expect("打开文件失败")
     }
 
     /// fill file with random data
