@@ -192,9 +192,9 @@ impl SQLiteBench {
 
             let mut sample = rng.sample_iter(Alphanumeric);
 
-            move || -> String {
+            move |n: usize| -> String {
                 let o = &mut sample;
-                let v = o.take(32).collect::<Vec<_>>();
+                let v = o.take(n).collect::<Vec<_>>();
                 String::from_utf8(v).unwrap()
             }
         };
@@ -212,8 +212,8 @@ impl SQLiteBench {
 
         for _ in 0..(self.n) {
             let idx: i32 = rng.gen_range(min_id..max_id);
-            let name = gen_s();
-            let value = gen_s();
+            let name = gen_s(32);
+            let value = gen_s(20 * 1024);
             let age = gen_age();
 
             sqlx::query(update)
@@ -237,9 +237,9 @@ impl SQLiteBench {
 
             let mut sample = rng.sample_iter(Alphanumeric);
 
-            move || -> String {
+            move |n: usize| -> String {
                 let o = &mut sample;
-                let v = o.take(32).collect::<Vec<_>>();
+                let v = o.take(n).collect::<Vec<_>>();
                 String::from_utf8(v).unwrap()
             }
         };
@@ -252,8 +252,8 @@ impl SQLiteBench {
         let start_time = Instant::now();
 
         for idx in 1..(self.n + 1) {
-            let name = gen_s();
-            let value = gen_s();
+            let name = gen_s(32);
+            let value = gen_s(20 * 1024);
             let age = gen_age();
 
             sqlx::query(update)
@@ -278,9 +278,9 @@ impl SQLiteBench {
 
             let mut sample = rng.sample_iter(Alphanumeric);
 
-            move || -> String {
+            move |n: usize| -> String {
                 let o = &mut sample;
-                let v = o.take(32).collect::<Vec<_>>();
+                let v = o.take(n).collect::<Vec<_>>();
                 String::from_utf8(v).unwrap()
             }
         };
@@ -293,8 +293,8 @@ impl SQLiteBench {
         let start_time = Instant::now();
 
         for _ in 0..(self.n) {
-            let name = gen_s();
-            let value = gen_s();
+            let name = gen_s(32);
+            let value = gen_s(20 * 1024);
             let age = gen_age();
 
             sqlx::query(insert)
