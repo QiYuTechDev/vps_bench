@@ -12,7 +12,7 @@ pub use utils::create_large_file_fast;
 
 #[inline(never)]
 /// 生成 `n` 个 `f32` 类型随机数的时间
-pub fn gen_n_f32_random_time(n: usize) -> time::Duration {
+pub fn gen_n_f32_random_time(n: u64) -> time::Duration {
     let mut rng = rand::rngs::SmallRng::from_entropy();
     let start_time = time::Instant::now();
     for _ in 0..n {

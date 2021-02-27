@@ -13,7 +13,7 @@ pub struct SQLiteCli {
     /// 注意: 如果这个文件存在则会被删除
     pub file: String,
 
-    /// 测试数据的数量 * 100_000
+    /// 测试的数据量 n * 100_000
     #[structopt(short, default_value = "1")]
     pub n: usize,
 

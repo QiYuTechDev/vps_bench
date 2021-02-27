@@ -2,8 +2,6 @@ use structopt::StructOpt;
 
 mod cpu;
 mod disk;
-#[cfg(target_os = "linux")]
-mod disk_raw;
 mod ping;
 mod quick;
 mod ram;
@@ -13,8 +11,6 @@ mod sqlite_db;
 
 pub use cpu::{CPUBench, CPUCli};
 pub use disk::{DiskBench, DiskCli};
-#[cfg(target_os = "linux")]
-pub use disk_raw::DiskRawCli;
 pub use ping::{JobCli, PingCli};
 pub use quick::{QuickBench, QuickCli};
 pub use ram::{RAMCli, RamBench};
@@ -26,8 +22,6 @@ pub enum BenchCli {
     CPU(CPUCli),
     /// 磁盘测试
     Disk(DiskCli),
-    #[cfg(target_os = "linux")]
-    DiskRaw(DiskRawCli),
     /// 内存测试
     RAM(RAMCli),
     /// SQLite 事务测试
@@ -46,8 +40,6 @@ impl BenchCli {
         match self {
             BenchCli::CPU(cpu) => cpu.run(None, None),
             BenchCli::Disk(disk) => disk.run(None, None),
-            #[cfg(target_os = "linux")]
-            BenchCli::DiskRaw(raw) => raw.run(None, None),
             BenchCli::RAM(ram) => ram.run(None, None),
             BenchCli::SQLite(db) => futures::executor::block_on(async move {
                 db.run(None, None).await;

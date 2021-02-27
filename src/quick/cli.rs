@@ -6,16 +6,17 @@ pub use super::QuickBench;
 /// VPS 性能快速测试
 pub struct QuickCli {
     /// CPU 性能测试{n}
-    /// 实际计算的次数是 2^n * 1_000_000
-    #[structopt(long, default_value = "0")]
-    pub cpu_n: usize,
+    /// 实际计算的次数是 cpu_n * 1_000_000_000
+    #[structopt(long, default_value = "1")]
+    pub cpu_n: u64,
+
     /// CPU 进行多少轮测试
     #[structopt(long, default_value = "16")]
     pub cpu_round: usize,
 
-    /// 内存测试指定内存的大小
-    #[structopt(long, default_value = "0")]
-    pub mem_size: u8,
+    /// 内存测试指定内存的大小 单位: MB
+    #[structopt(long, default_value = "1")]
+    pub mem_size: usize,
 
     /// 内存进行多少轮测试
     #[structopt(long, default_value = "16")]
@@ -26,12 +27,12 @@ pub struct QuickCli {
     #[structopt(long)]
     pub disk_file_name: String,
 
-    /// 磁盘测试实际测试使用的文件大小为 2^n * 1GB
-    #[structopt(long, default_value = "0")]
-    pub disk_n: u8,
+    /// 磁盘测试实际测试使用的文件大小为 n * 1GB
+    #[structopt(long, default_value = "1")]
+    pub disk_n: u64,
 
     #[structopt(long, default_value = "1")]
-    /// SQLite 测试多少使用多少 百万行数据
+    /// SQLite 测试的数据量 n * 100_000
     pub sqlite_n: usize,
 
     #[structopt(long)]

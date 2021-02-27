@@ -14,10 +14,10 @@ pub struct RamBench {
 
 impl RamBench {
     /// 创建一个新的 RAMBench 测试
-    /// `mem_size` 单位为: 128MB
+    /// `mem_size` 单位为: MB
     pub fn new(mem_size: usize) -> Self {
         Self {
-            mem: Vec::with_capacity(mem_size * 128 * 1024 * 1024),
+            mem: Vec::with_capacity(mem_size * 1024 * 1024),
         }
     }
 

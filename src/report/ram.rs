@@ -6,13 +6,13 @@ use crate::ram::RamResult;
 #[derive(Debug, Serialize)]
 pub struct RamForm {
     pub job_id: Option<String>,
-    pub mem: u8,
+    pub mem: usize,
     pub results: Vec<RamResult>,
 }
 
 impl RamForm {
     #[inline]
-    pub fn new(job_id: Option<String>, mem: u8, results: Vec<RamResult>) -> Self {
+    pub fn new(job_id: Option<String>, mem: usize, results: Vec<RamResult>) -> Self {
         Self {
             job_id,
             mem,

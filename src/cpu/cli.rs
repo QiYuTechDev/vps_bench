@@ -13,9 +13,9 @@ use crate::report::{BenchReport, CpuForm};
 /// 当前仅仅支持 sqrt 性能测试{n}
 /// 在相同的参数下,使用的时间越少越好
 pub struct CPUCli {
-    /// 实际计算的次数是 2^n * 1_000_000
-    #[structopt(long, default_value = "0")]
-    pub n: usize,
+    /// 实际计算的次数是 n * 1_000_000_000
+    #[structopt(short, default_value = "1")]
+    pub n: u64,
 
     /// 多少轮测试
     #[structopt(long, default_value = "16")]
@@ -27,7 +27,7 @@ pub struct CPUCli {
 
 impl CPUCli {
     pub fn run(&self, job_id: Option<String>, reporter: Option<BenchReport>) {
-        let cpu = CPUBench::new(2usize.pow(self.n as u32));
+        let cpu = CPUBench::new(self.n);
 
         let result: Vec<_> = (0..self.round)
             .map(|idx| {

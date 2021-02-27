@@ -5,14 +5,14 @@ use rand::{Rng, SeedableRng};
 /// CPU 压力测试
 pub struct CPUBench {
     /// compute `n` times
-    pub n: usize,
+    pub n: u64,
 }
 
 impl CPUBench {
-    /// `n` 计算多少个循环
-    pub fn new(n: usize) -> Self {
+    /// `n` 计算多少 十亿 循环
+    pub fn new(n: u64) -> Self {
         CPUBench {
-            n: n * 1024 * 1024 * 1024,
+            n: n * 1_000_000_000,
         }
     }
 

@@ -11,7 +11,7 @@ pub struct DiskBench {
     /// 测试使用的文件名称
     pub file_name: String,
     /// 测试文件大小
-    pub file_size: usize,
+    pub file_size: u64,
     /// 一条记录的大小
     /// 每次 读取/写入 的固定大小
     pub block_size: usize,
@@ -19,16 +19,20 @@ pub struct DiskBench {
 
 impl DiskBench {
     /// 创建一个 新的 磁盘测试
-    pub fn new(file_name: String, file_size: usize, block_size: usize) -> DiskBench {
+    pub fn new(file_name: String, file_size: u64, block_size: usize) -> DiskBench {
         DiskBench {
             file_name,
-            file_size,
+            file_size: file_size * 1024 * 1024 * 1024,
             block_size,
         }
     }
 
     /// 运行磁盘测试
     pub fn run_bench(&self) -> DiskResult {
+        println!(
+            "磁盘测试开始,文件大小: {},块大小: {}",
+            self.file_size, self.block_size
+        );
         let mut result = DiskResult::new(self.file_size, self.block_size);
 
         result.seq = IOTime::new(self.seq_read(), self.seq_write());
@@ -37,6 +41,7 @@ impl DiskBench {
         result.stride = IOTime::new(self.stride_read(), self.stride_write());
         result.reverse = IOTime::new(self.reverse_read(), self.reverse_write());
 
+        println!("磁盘测试结束:\n{}\n", result.to_string());
         result
     }
 
@@ -120,7 +125,7 @@ impl DiskBench {
         // 随机写数据
         for _ in 0..blocks {
             let v = rng.gen_range(0..blocks);
-            file.seek(SeekFrom::Start((v * self.block_size) as u64))
+            file.seek(SeekFrom::Start(v * self.block_size as u64))
                 .unwrap();
             file.write_all(data.as_slice()).unwrap();
         }
@@ -142,7 +147,7 @@ impl DiskBench {
         // 随机读取数据
         for _ in 0..blocks {
             let v = rng.gen_range(0..blocks);
-            file.seek(SeekFrom::Start((v * self.block_size) as u64))
+            file.seek(SeekFrom::Start(v * self.block_size as u64))
                 .unwrap();
             file.read_exact(data.as_mut_slice()).unwrap();
             // this is intended to prevent the compiler opt out
@@ -177,7 +182,7 @@ impl DiskBench {
     pub fn do_stride_write(&self, file: &mut std::fs::File, step: usize, data: &[u8]) {
         let blocks = self.blocks();
         for idx in (0..blocks).step_by(step) {
-            file.seek(SeekFrom::Start((idx * self.block_size) as u64))
+            file.seek(SeekFrom::Start(idx * self.block_size as u64))
                 .unwrap();
             file.write_all(data).unwrap();
         }
@@ -206,7 +211,7 @@ impl DiskBench {
     pub fn do_stride_read(&self, file: &mut std::fs::File, step: usize, data: &mut [u8]) {
         let blocks = self.blocks();
         for idx in (0..blocks).step_by(step) {
-            file.seek(SeekFrom::Start((idx * self.block_size) as u64))
+            file.seek(SeekFrom::Start(idx * self.block_size as u64))
                 .unwrap();
             file.read_exact(data).unwrap();
         }
@@ -221,7 +226,7 @@ impl DiskBench {
 
         let start_time = time::Instant::now();
         for idx in (0..self.blocks()).rev() {
-            file.seek(SeekFrom::Start((idx * self.block_size) as u64))
+            file.seek(SeekFrom::Start(idx * self.block_size as u64))
                 .unwrap();
             file.write_all(data.as_slice()).unwrap();
         }
@@ -239,7 +244,7 @@ impl DiskBench {
 
         let start_time = time::Instant::now();
         for idx in (0..self.blocks()).rev() {
-            file.seek(SeekFrom::Start((idx * self.block_size) as u64))
+            file.seek(SeekFrom::Start(idx * self.block_size as u64))
                 .unwrap();
             file.read_exact(data.as_mut_slice()).unwrap();
         }
@@ -286,8 +291,8 @@ impl DiskBench {
     }
 
     #[inline(always)]
-    const fn blocks(&self) -> usize {
-        self.file_size / self.block_size
+    const fn blocks(&self) -> u64 {
+        self.file_size / self.block_size as u64
     }
 
     /// 生成 `block_size` 大小的随机数据

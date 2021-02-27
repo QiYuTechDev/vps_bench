@@ -21,9 +21,9 @@ use crate::report::RamForm;
 ///
 /// 在相同的参数下,使用的时间越少越好
 pub struct RAMCli {
-    /// 指定内存的大小
-    #[structopt(long, default_value = "0")]
-    pub mem: u8,
+    /// 指定内存的大小 单位: MB
+    #[structopt(long, default_value = "1")]
+    pub mem: usize,
 
     /// 多少轮测试
     #[structopt(long, default_value = "16")]
@@ -36,7 +36,9 @@ pub struct RAMCli {
 impl RAMCli {
     /// 运行 RAM 测试
     pub fn run(&self, job_id: Option<String>, reporter: Option<BenchReport>) {
-        let mut ram = RamBench::new(2usize.pow(self.mem as u32));
+        assert!(self.mem > 0);
+
+        let mut ram = RamBench::new(self.mem);
         let results: Vec<_> = (0..self.round)
             .map(|idx| {
                 println!("第 {} 轮的 内存 测试开始...", idx + 1);

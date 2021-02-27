@@ -6,7 +6,7 @@ use crate::shared::IOTime;
 #[derive(Debug, Default, Serialize)]
 pub struct DiskResult {
     /// 文件大小
-    pub file_size: usize,
+    pub file_size: u64,
     /// 记录块大小
     pub block_size: usize,
     /// 顺序 读/写 测试结果
@@ -23,7 +23,7 @@ pub struct DiskResult {
 
 impl DiskResult {
     #[inline]
-    pub fn new(file_size: usize, block_size: usize) -> Self {
+    pub fn new(file_size: u64, block_size: usize) -> Self {
         Self {
             file_size,
             block_size,
