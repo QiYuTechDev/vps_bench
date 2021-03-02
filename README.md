@@ -20,12 +20,13 @@
 * 网络 (参见: vps_network 项目)
 * SQLite3
 
-等待添加的:
+等待添加:
 
+* nginx
 * MySQL
 * PostgreSQL
 
-## 注意:
+## 文档 & 博客
 
-    版权归属 奇遇科技 公司, 保留所有权利。
-    您没有被授于 fork 此仓库的权利, 请不要 fork 此代码库。
+* [文档](https://oss.qiyutech.tech/vps_bench/index.html)
+* [发布记录](https://blog.qiyutech.tech/202102/28_bench_tool/)
