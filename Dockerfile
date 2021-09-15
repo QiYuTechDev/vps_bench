@@ -1,4 +1,4 @@
-FROM debian:buster as base
+FROM debian:bullseye as base
 
 RUN apt update && apt install -y curl
 RUN curl --proto '=https' -sSf https://sh.rustup.rs | sh -s -- --default-toolchain none -y
@@ -11,7 +11,7 @@ COPY . /app
 RUN cd /app && cargo build --release
 
 
-FROM debian:buster
+FROM debian:bullseye
 
 COPY --from=base /app/target/release/vps_bench /bin/
 
