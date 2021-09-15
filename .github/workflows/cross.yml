@@ -31,7 +31,7 @@ jobs:
 
       - name: install ssl on linux
         if: strategy.os == 'ubuntu-20.04'
-        run: apt install -y gcc pkg-config libssl-dev
+        run: apt install -y gcc pkg-config libssl libssl-dev
 
       - name: cross build
         run: cross build --verbose
